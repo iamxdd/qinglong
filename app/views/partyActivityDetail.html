@@ -1,0 +1,37 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<i class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+		<h4 class="text-center">
+			{{partyActivityDetail.Title}}
+		</h4>
+		<div class="text-center" style="border-bottom: solid 1px #ddd;padding-bottom: 10px;margin-bottom: 15px;">
+			<span class="span-party">发布人:</span> &nbsp;&nbsp; {{partyActivityDetail.CommunistName}}
+			<span class="span-party">党组织:</span> &nbsp;&nbsp;{{partyActivityDetail.PartyOrganizationName}}
+			<span class="span-party">发布时间 :</span> &nbsp;&nbsp; {{partyActivityDetail.CreatedAt|date:"yyyy-MM-dd HH:mm"}}
+		</div>
+		<div style="text-indent: 2em;min-height: 100px;" ng-bind-html="partyActivityDetail.Content">
+
+		</div>
+		<!--报名参加人员-->
+		<p class="details-active-person new-p">报名参加人员 ({{count}}人)</p>
+		<div class="list-inline detail-line"></div>
+
+		<div class="quanzi-main details-active-person-div ">
+			<ul>
+				<li ng-if="!activityList||activityList.length===0">暂无任何数据</li>
+				<li class="quanzi-manager-img canjia activity-new" ng-repeat="x in activityList">
+					<div class="head-portrait">
+						<img ng-src="{{x.CommunistImages}}" />
+					</div>
+					<span class="des-span join-span" title="{{x.CommunistName}}">{{x.CommunistName}}</span>
+					<span class="quanzi-header-ID">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}
+				</li>
+							
+				</ul>
+		</div>
+		
+	</div>
+</div>
+<!-- END panel-->

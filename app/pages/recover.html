@@ -1,0 +1,65 @@
+<div class="block-center mt-xl wd-xl">
+	<!-- START panel-->
+	<div class="panel panel-dark panel-flat" cg-busy="listBusyPromise">
+		<div class="panel-heading text-center">
+			<a href="#">
+				<img src="app/img/logo.png" alt="Image" class="block-center img-rounded" />
+			</a>
+		</div>
+		<div class="panel-body" ng-if="first">
+			<p class="text-center pv">找回密码-发送验证码</p>
+			<form role="form" name="recoverForm" novalidate class="form-validate" ng-submit="sendPassward()">
+				<p class="text-center">通过您账号绑定的手机号可以重置登录密码，如果您不确定手机号码请联系网络管理员。</p>
+				<div class="form-group has-feedback">
+					<label class="text-muted">登录账号</label>
+					<input type="text" name="phone" placeholder="输入登录账号" autocomplete="off" ng-model="recover.name" required="" class="form-control" />
+					<span class="fa fa-user form-control-feedback text-muted"></span>
+					<span ng-show="isNull(recover.name)" class="text-danger">请填写您的账号</span>
+				</div>
+
+				<div class="form-group has-feedback">
+					<label class="text-muted">手机号码</label>
+					<input type="text" name="phone" placeholder="输入手机号码" autocomplete="off" ng-model="recover.phone" required="" class="form-control" />
+					<span class="fa fa-mobile form-control-feedback text-muted"></span>
+					<span ng-show="isNull(recover.phone)" class="text-danger">请填写手机号码</span>
+					<span ng-show="isFilter(recover)" class="text-danger">输入的手机号码格式不对</span>
+				</div>
+				<button type="button" ng-click="backToPre()" class="btn btn-default btn-block">返 回</button>
+				<button type="submit" class="btn btn-danger btn-block">下一步</button>
+			</form>
+		</div>
+		<div class="panel-body" ng-if="!first">
+			<p class="text-center pv">找回密码-设置新密码</p>
+			<form role="form" name="recoverForm" novalidate class="form-validate" ng-submit="submitForm()">
+				<p class="text-center">通过您账号绑定的手机号可以重置登录密码，如果您不确定手机号码请联系网络管理员。</p>
+				<div class="form-group has-feedback">
+					<label class="text-muted">输入验证码</label>
+					<input type="text" name="phone" autocomplete="off" placeholder="请输入验证码" ng-model="newp.code" required="" class="form-control" />
+					<span class="fa fa-sort-numeric-asc form-control-feedback text-muted"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<label class="text-muted">设置新密码</label>
+					<input type="password" name="phone" autocomplete="off" placeholder="请输入新密码" ng-model="newp.password" required="" class="form-control" />
+					<span class="fa fa-lock form-control-feedback text-muted"></span>
+				</div>
+				<div class="form-group has-feedback">
+					<label class="text-muted">确认新密码</label>
+					<input type="password" name="phone" autocomplete="off" placeholder="请确认新密码" ng-model="newp.confirmationPwd" required="" class="form-control" />
+					<span class="fa fa-lock form-control-feedback text-muted"></span>
+				</div>
+				<button type="button" ng-click="reSendPassward()" ng-disabled="sendBtn" class="btn btn-default btn-block" ng-bind="sendValue"></button>
+				<button type="submit" class="btn btn-danger btn-block">确 定</button>
+
+			</form>
+		</div>
+	</div>
+	<!-- END panel-->
+	<div class="p-lg text-center">
+		<span>&copy;</span>
+		<span ng-bind="app.year"></span>
+		<span>-</span>
+		<span ng-bind="app.name"></span>
+		<br/>
+		<span ng-bind="app.description"></span>
+	</div>
+</div>

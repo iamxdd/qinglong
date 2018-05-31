@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" cg-busy="listbusyPromise">
+			<section class="content-image">
+			</section>
+			<section class="content-section">
+			</section>
+		</div>
+		<script src="../app/js/zepto_1.2.0.js"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			var getDetail = function(id, token, title) {
+				if(title) $("title").html(title);
+				var data = {
+					id: id
+				};
+				var headers = token ? {
+					'Authorization': 'Bearer ' + token
+				} : null;
+				$.ajax({
+					headers: headers,
+					type: "get",
+					url: apiAdds3 + "information/getcontentlist?id=" + id,
+					dataType: 'json',
+					success: function(response) {
+						var Code = response.State.Code;
+						var Message = response.State.Message;
+						if(Code === 0) {
+							var Content = response.Content;
+							if(!!Content.Images) {
+								$(".content-image").html('<p style="text-align: center;"><img src="' + Content.Images + '" style="max-width: 100%;"></p>');
+								$(".content-section").html(Content.Content);
+							}
+							if(!title) $("title").html(Content && Content.Title ? Content.Title : "获取数据出错！");
+						} else {
+							if(!title) $("title").html("获取数据出错！");
+							alert(Message);
+						}
+					},
+					error: function(xhr, type) {
+						if(!title) $("title").html("获取数据出错！");
+						console.log('Ajax error!');
+					}
+
+				});
+			};
+
+			$("body").on("click", "a", function() {
+				var e = event || window.event;
+				e.preventDefault();
+			});
+
+			//getDetail(25, null);
+		</script>
+	</body>
+
+</html>

@@ -1,0 +1,10 @@
+.inputIn{
+	max-width: inherit!important;
+	padding-left: 10px;
+	width: 230px!important;
+	
+}
+.addlogin{
+	float: right;
+}
+.webkit input::-webkit-input-placeholder {font-size: 10px}

@@ -1,0 +1,129 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<i class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+		<h4 class="text-center">
+			{{ConferenceHallDetail.Title}}
+		</h4>
+		<div class="text-center" style="border-bottom: solid 1px #ddd;padding-bottom: 10px;margin-bottom: 15px;">
+			<span class="span-party">发布人:</span> &nbsp;&nbsp; {{ConferenceHallDetail.CommunistName}}
+			<span class="span-party">党组织:</span> &nbsp;&nbsp;{{ConferenceHallDetail.PartyOrganizationName}}
+			<span class="span-party">发布时间 :</span> &nbsp;&nbsp; {{ConferenceHallDetail.CreatedAt|date:"yyyy-MM-dd HH:mm"}}
+		</div>
+		<div style="text-indent: 2em;min-height: 100px;" ng-bind-html="ConferenceHallDetail.Content">
+
+		</div>
+		<!--111-->
+		<ul class="nav nav-tabs tabs-old">
+
+			<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+				<a ng-click="checked(x)">{{x.Name}}</a>
+			</li>
+		</ul>
+		<!--意识结果-->
+
+		<div class="panel panel-default">
+
+			<div class="table-responsive details-table">
+				<div class="details-state-start" ng-if="selectTab.Id===1">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!allList||allList.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in allList">
+						<img class="details-state-img" ng-src="{{x.CommunistImages}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-lg-4 details-img-content CommunistName-max" title="{{x.CommunistName}}">{{x.CommunistName}}</td>
+										<td class="col-lg-2" ng-bind="(x.VoteState===1 ? '同意' : (x.VoteState===2 ? '反对' : '弃权'))"></td>
+										<td class="col-lg-2">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择同意-->
+				<div class="details-state-start" ng-if="selectTab.Id===2">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!AgreeList||AgreeList.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in AgreeList">
+						<img class="details-state-img" ng-src="{{x.CommunistImages}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.CommunistName}}</td>
+										<td class="col-4">同意</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择方队-->
+				<div class="details-state-start" ng-if="selectTab.Id===3">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!Objection||Objection.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in Objection">
+						<img class="details-state-img" ng-src="{{x.CommunistImages}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.CommunistName}}</td>
+										<td class="col-4">反对</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择弃权-->
+				<div class="details-state-start" ng-if="selectTab.Id===4">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!Waiver||Waiver.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in Waiver">
+						<img class="details-state-img" ng-src="{{x.CommunistImages}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.CommunistName}}</td>
+										<td class="col-4">弃权</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--分页开始-->
+			<div class="panel-footer" ng-if="selectTab.Id!=1">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+						</paging>
+					</div>
+				</div>
+			</div>
+			<!--分页结束-->
+		</div>
+
+	</div>
+
+</div>
+<!-- END panel-->

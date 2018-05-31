@@ -1,0 +1,153 @@
+<!-- START Top Navbar-->
+<nav role="navigation" class="navbar topnavbar">
+	<!-- START navbar header-->
+	<div class="navbar-header">
+		<a href="#/" class="navbar-brand">
+			<div class="brand-logo">
+				<img ng-if="app.layout.theme===3" src="app/img/logo.png" alt="滨海家园" class="img-responsive" />
+				<img ng-if="app.layout.theme===2" src="app/img/logo_c.png" alt="社区绿岛" class="img-responsive" />
+				<img ng-if="app.layout.theme===1" src="app/img/logo_t.png" alt="青龙港湾" class="img-responsive" />
+			</div>
+			<div class="brand-logo-collapsed">
+				<img src="app/img/logo-single.png" alt="滨海家园" class="img-responsive" />
+			</div>
+		</a>
+	</div>
+	<!-- END navbar header-->
+	<!-- START Nav wrapper-->
+	<div class="nav-wrapper">
+		<!-- START Left navbar-->
+		<ul class="nav navbar-nav">
+			<li>
+				<!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+				<a href="#" trigger-resize="" ng-click="app.layout.isCollapsed = !app.layout.isCollapsed" class="hidden-xs" title="缩略菜单切换">
+					<em class="fa fa-navicon"></em>
+				</a>
+				<!-- Button to show/hide the sidebar on mobile. Visible on mobile only.-->
+				<a href="#" toggle-state="aside-toggled" no-persist="no-persist" class="visible-xs sidebar-toggle">
+					<em class="fa fa-navicon"></em>
+				</a>
+			</li>
+			<!-- START User avatar toggle-->
+			<li>
+				<!-- Button used to collapse the left sidebar. Only visible on tablet and desktops-->
+				<a href="#" ng-click="toggleUserBlock()" title="我的信息">
+					<em class="icon-user"></em>
+				</a>
+			</li>
+			<!-- END User avatar toggle-->
+			<li dropdown="" class="dropdown dropdown-list">
+				<a dropdown-toggle="" title="切换角色">
+					<em class="fa fa-users"></em>
+				</a>
+				<!-- START Dropdown menu-->
+				<ul class="dropdown-menu animated flipInX">
+					<li ng-click="changRole(x)" ng-repeat="x in rolesList">
+						<a>{{x.RoleName}}</a>
+					</li>
+				</ul>
+				<!-- END Dropdown menu-->
+			</li>
+			<!-- EXIT System-->
+			<li>
+				<a ng-click="exitStstem()" title="退出系统">
+					<em class="fa fa-power-off"></em>
+				</a>
+			</li>
+			<!-- EXIT System--->
+		</ul>
+		<!-- END Left navbar-->
+		<!-- START Right Navbar-->
+		<ul class="nav navbar-nav navbar-right">
+			<!-- START lock screen>-->
+			<li>
+				<a ui-sref="page.lock" title="锁定屏幕">
+					<em class="icon-lock"></em>
+				</a>
+			</li>
+			<!-- END lock screen-->
+			<!-- Search icon>-->
+			<!--<li>
+				<a href="#" search-open="search-open">
+					<em class="icon-magnifier"></em>
+				</a>
+			</li>-->
+			<!-- Fullscreen (only desktops)-->
+			<li class="visible-lg">
+				<a href="#" toggle-fullscreen="toggle-fullscreen" title="全屏显示">
+					<em class="fa fa-expand"></em>
+				</a>
+			</li>
+			<!-- START Alert menu-->
+			<li dropdown="" class="dropdown dropdown-list">
+				<a dropdown-toggle="" title="消息提醒">
+					<em class="icon-bell"></em>
+					<div class="label label-danger">{{list+uplist}}</div>
+				</a>
+				<!-- START Dropdown menu-->
+				<ul class="dropdown-menu animated flipInX">
+					<li>
+						<!-- START list group-->
+						<div class="list-group">
+							<!-- list item-->
+							<a href="#/app/infoUpload" class="list-group-item">
+								<div class="media-box">
+									<div class="pull-left">
+										<em class="fa fa-envelope fa-2x text-warning"></em>
+									</div>
+									<div class="media-box-body clearfix">
+										<p class="m0">有新的上报事项</p>
+										<p class="m0 text-muted">
+											<small>你收到<span ng-bind="uplist"></span>条上报事项</small>
+										</p>
+									</div>
+								</div>
+							</a>
+							<!-- list item-->
+							<a href="#/app/event" class="list-group-item">
+								<div class="media-box">
+									<div class="pull-left">
+										<em class="fa fa-tasks fa-2x text-success"></em>
+									</div>
+									<div class="media-box-body clearfix">
+										<p class="m0">有新的待办事项</p>
+										<p class="m0 text-muted">
+											<small>你还有<span ng-bind="list"></span>条待办事项</small>
+										</p>
+									</div>
+								</div>
+							</a>
+							<!-- last list item -->
+							<!--<a href="#/app/eventHandle" class="list-group-item">
+								<small>更多信息</small>
+								<span class="label label-danger pull-right">{{list.length+uplist.length}}</span>
+							</a>-->
+						</div>
+						<!-- END list group-->
+					</li>
+				</ul>
+				<!-- END Dropdown menu-->
+			</li>
+			<!-- END Alert menu-->
+			<!-- START Contacts button-->
+			<li>
+				<a href="#" toggle-state="offsidebar-open" no-persist="no-persist" title="切换管理社区/院落">
+					<em class="fa fa-building-o"></em>
+				</a>
+			</li>
+			<!-- END Contacts menu-->
+		</ul>
+		<!-- END Right Navbar-->
+	</div>
+	<!-- END Nav wrapper-->
+	<!-- START Search form>
+   <form role="search" action="search.html" class="navbar-form">
+      <div class="form-group has-feedback">
+         <input type="text" placeholder="{{ 'topbar.search.PLACEHOLDER' | translate }}" class="form-control" />
+         <div search-dismiss="search-dismiss" class="fa fa-times form-control-feedback"></div>
+      </div>
+      <button type="submit" class="hidden btn btn-default">确定</button>
+   </form>
+   <!-- END Search form-->
+</nav>
+<!-- END Top Navbar-->

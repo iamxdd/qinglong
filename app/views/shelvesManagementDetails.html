@@ -1,0 +1,217 @@
+<h3>{{$state.current.title}}</h3>
+
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="text-right">
+		<div class="commodity-btn" ng-class="tdClass(ShelfState)">
+		</div>
+	</div>
+	<i class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+	<div class="row rownew">
+		<div class="form-group  col-lg-4">
+			<div class="form-group-div">商品名称:</div>
+			<span title="{{list[0].Name}}">{{ PcService.subStrDescribe(DetailsData.Name)}}</span>
+		</div>
+		<div class="form-group col-lg-8">
+			<div class="form-group-div">有效期:</div>
+			<span>{{UseTimeRangeO}}~{{UseTimeRangeT}}</span>
+		</div>
+		<div class="form-group  col-lg-4">
+			<div class="form-group-div">范围:</div>
+			<span ng-bind="DetailsData.Range===1 ? '全部商品' : '部分商品'"></span>
+		</div>
+		<!--<div class="form-group col-lg-8">
+			<div class="form-group-div">叠加数量:</div>
+			<span>{{DetailsData.SuperpositionNum}} 张</span>
+		</div>-->
+		<div class="form-group  col-lg-8">
+			<div class="form-group-div">积分:</div>
+			<span>{{DetailsData.PointNum}}</span>
+		</div>
+		<div class="form-group col-lg-4">
+			<div class="form-group-div">优惠券类型:</div>
+			<span>{{numberToText(DetailsData.CouponType,ticketCategoryCodes)}}</span>
+		</div>
+		<div class="form-group col-lg-8" ng-if="DetailsData.CouponType===4">
+			<div class="form-group-div">价格:</div>
+			<span>{{DetailsData.Worth}}元</span>
+		</div>
+		<div class="form-group col-lg-4">
+			<div class="form-group-div">库存:</div>
+			<span>{{DetailsData.RepositoryCount}}</span>
+		</div>
+		<div class="form-group col-lg-12">
+			<div class="form-group-div">照片:</div>
+			<div class="commodityphoto min-h">
+				<img ng-src="{{x}}" alt="" ng-repeat="x in DetailsData.imgList" />
+			</div>
+
+		</div>
+
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">描述:</div>
+			<span title="{{DetailsData.Describe}}">{{PcService.subStrDescribe(DetailsData.Describe,80)}}</span>
+		</div>
+		<div class="form-group  col-lg-12" ng-if="type=='single' ">
+			<div class="form-group-div">备注:</div>
+			<span title="{{DetailsData.ShelfRemarks}}">{{PcService.subStrDescribe(DetailsData.ShelfRemarks,80)}}</span>
+		</div>
+		<div class="form-group  col-lg-12" ng-if="type=='audit' ">
+			<div class="form-group-div">备注:</div>
+			<span title="{{DetailsData.ReviewRemarks}}">{{PcService.subStrDescribe(DetailsData.ReviewRemarks,80)}}</span>
+		</div>
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">店铺地址:</div>
+			<span title="{{DetailsData.ShopMapAddress}}">{{PcService.subStrDescribe(DetailsData.ShopMapAddress,80)}}</span>
+		</div>
+	</div>
+	<!--结束-->
+	<div class="commodity-line"></div>
+	<div class="row rownew">
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">添加人:</div>
+			<span>{{DetailsData.ShopMemberNickName}}</span>
+		</div>
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">时间:</div>
+			<span>{{DetailsData.CreatedAt | date:"yyyy-MM-dd HH:mm"}}</span>
+		</div>
+
+		<div class="form-group  col-lg-12" ng-if="ShelfState === '上架中' ">
+			<button type="submit" class="btn btn-primary" ng-click="creatOne(1)" style="margin: 0 auto;display: block;text-align: center;">下架</button>
+		</div>
+
+		<div class="form-group  col-lg-12" ng-if="ShelfState === '待审核' ">
+			<div class="col-lg-11 col-lg-offset-1 banner-button">
+				<button type="submit" class="btn btn-danger" ng-click="creatOne(2)">不通过</button>
+				<button type="submit" class="btn btn-primary" ng-click="creatOne(3)">通过</button>
+				<button type="button" class="btn btn-default" ng-click="editorItem()">修改</button>
+			</div>
+
+		</div>
+
+	</div>
+</div>
+
+<!-- END panel-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">下架</h5>
+	</div>
+	<div class="modal-body" id="add-advertisements" cg-busy="ngDialogPromise">
+		<form class="form-horizontal mycheckbox-inline " cg-busy="ngDialogPromise">
+			<div class="form-group">
+				<label class="control-label col-lg-2">商品名称</label>
+				<div class=" col-lg-8">
+					<input type="text" ng-model="title" class="form-control" required disabled="true" />
+				</div>
+			</div>
+			<div class="form-group ">
+				<label class="control-label col-lg-2">备注</label>
+				<div class=" col-lg-8">
+					<textarea class="form-control fundtext" ng-model="newsAdd.Remarks"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group" style="margin-top:40px">
+				<div class="col-lg-11 col-lg-offset-1">
+					<input type="button" ng-click="closeThisDialog(0)" class="btn btn-default" value="取消" />
+					<input type="button" ng-click="formSubmit()" class="btn btn-success" value="确 定" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--修改-->
+<script type="text/ng-template" id="createTwo">
+	<div class="modal-header">
+		<h5 class="modal-title">修改商品信息</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal mycheckbox-inline" form-submit="formSubmit()">
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-2">名称</label>
+				<div class="col-lg-10">
+					<input type="text" ng-model="commodity.Name" class="form-control" required placeholder="请输入商品名称" maxlength="30" />
+				</div>
+			</div>
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">范围</label>
+				<div class="col-lg-8">
+					<select class="form-control" ng-model="commodity.Range" ng-options="x.Id as x.Name for x in RangeSelect"></select>
+				</div>
+			</div>
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-2">积分</label>
+				<div class=" col-lg-10">
+					<input type="text" ng-model="commodity.PointNum" class="form-control" required />
+				</div>
+			</div>
+			<!--<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">每人限购数量</label>
+				<div class=" col-lg-8 form-inline">
+					<input type="text" style="width: 100px;" ng-model="commodity.SuperpositionNum" class="form-control" required />&nbsp;&nbsp;&nbsp;<span class="add-on" style="color: #f60;font-size: 12px;">顾客限购数量</span>
+				</div>
+			</div>-->
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">库存</label>
+				<div class=" col-lg-8">
+					<input type="text" ng-model="commodity.RepositoryCount" class="form-control" required />
+				</div>
+			</div>
+			
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-2">券类型</label>
+				<div class="col-lg-10">
+					<select class="form-control" ng-model="commodity.CouponType" ng-change="selectCouponType(commodity.CouponType)" ng-options="x.Id as x.Name for x in ticketCategoryCodes"></select>
+				</div>
+			</div>
+			<div class="form-group col-lg-6" ng-show="showWorth">
+				<label class="control-label col-lg-4">价格</label>
+				<div class=" col-lg-8 new-input-border">
+					<input type="text" ng-model="commodity.Worth" class="form-control " required />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-1">有效期</label>
+				<div class=" col-lg-11 one-columu" id="usTime">
+					<div class="form-inline" ng-if="commodity.Type==='2'">
+						<input ng-model="commodity.StartAt" type="text" class="form-control" id="startTime" placeholder="开始时间" /> &nbsp;-&nbsp;
+						<input ng-model="commodity.EndAt" type="text" class="form-control" id="endTime" placeholder="结束时间" />
+					</div>
+				</div>
+			</div>
+
+			<div class="clearfix">
+
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-1">商品图片</label>
+				<div class="col-lg-2 upImg">
+					<image-file-uploader uif-callback="configImageAfterUploadOne(url)" ng-disabled="editing" default-url="{{commodity.ImagesOne}}"></image-file-uploader>
+				</div>
+				<div class="col-lg-2 upImg">
+					<image-file-uploader uif-callback="configImageAfterUploadTwo(url)" ng-disabled="editing" default-url="{{commodity.ImagesTwo}}"></image-file-uploader>
+				</div>
+				<div class="col-lg-2 upImg">
+					<image-file-uploader uif-callback="configImageAfterUploadThree(url)" ng-disabled="editing" default-url="{{commodity.ImagesThree}}"></image-file-uploader>
+				</div>
+				<div class="col-lg-2 upImg">
+					<image-file-uploader uif-callback="configImageAfterUploadFour(url)" ng-disabled="editing" default-url="{{commodity.ImagesFour}}"></image-file-uploader>
+				</div>
+				<div class="col-lg-2 upImg" style="vertical-align: bottom;height: 80px; color: #f60;font-size: 12px;padding-top: 60px;line-height: 20px;">建议上传图片比例1:1</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-1">描述</label>
+				<div class="col-lg-11 one-columu">
+					<textarea class="form-control" ng-model="commodity.Describe"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-1">
+					<input type="button" class="btn btn-success" ng-click="formSubmit()" value="确定" />
+					<input type="button" ng-click="closeThisDialog()" class="btn btn-default" value="取消" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>

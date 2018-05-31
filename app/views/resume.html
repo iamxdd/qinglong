@@ -1,0 +1,80 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<i title="点击返回上一页面" class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+		</div>
+		<div class="table-responsive">
+			<table class="table table-bordered table-hover-new">
+				<caption>{{x.Name}}</caption>
+				<tr>
+					<td width="14%">姓名</td>
+					<td width="14%">{{x.Name}}</td>
+					<td width="14%">性别</td>
+					<td width="14%">{{PcService.numberToText(x.Sex,sexes)}}</td>
+					<td width="14%">出生日期</td>
+					<td width="14%">{{x.BirthDate|date:"yyyy-MM-dd"}}</td>
+					<td width="16%" rowspan="4">照片</td>
+				</tr>
+				<tr>
+					<td>籍贯</td>
+					<td>{{x.DomicilePlace}}</td>
+					<td>民族</td>
+					<td>{{PcService.numberToText(x.Nationality,Nations)}}</td>
+					<td>政治面貌</td>
+					<td>{{PcService.numberToText(x.PoliticalStatus,PoliticalStatuses)}}</td>
+				</tr>
+				<tr>
+					<td>身份证号码</td>
+					<td colspan="3">{{x.IDCardNo}}</td>
+					<td>社保状态</td>
+					<td>{{PcService.numberToText(x.SocialSecurity,socialsecurity)}}</td>
+				</tr>
+				<tr>
+					<td>人群类型</td>
+					<td colspan="3">{{PcService.numberToText(x.Population,Populations)}}</td>
+					<td>婚姻状态</td>
+					<td>{{PcService.numberToText(x.MaritalStatus,maritalStatus)}}</td>
+				</tr>
+				<tr>
+					<td>联系电话</td>
+					<td colspan="3">{{x.Phone}}</td>
+					<td>重点人群类型</td>
+					<td colspan="2">{{x.KeyPopulations}}</td>
+				</tr>
+				<tr>
+					<td>教育经历</td>
+					<td colspan="6">
+						<p>最高学历：{{PcService.numberToText(x.Degree,Education)}}</p>
+						<p>学校名称：{{x.SchoolName}}</p>
+						<p>就读时间：{{x.AcademicDuration}}</p>
+					</td>
+				</tr>
+				<tr>
+					<td>工作经历</td>
+					<td colspan="6">
+						<p ng-if="!x.WorkExperience||x.WorkExperience.length===0">暂无工作经历！</p>
+						<p ng-repeat="y in x.WorkExperience">{{y.Time}} {{y.Name}} {{y.Description}}</p>
+					</td>
+				</tr>
+				<tr>
+					<td>组织关系</td>
+					<td colspan="6">
+						<p ng-if="x.OrganRelation=='  '">暂无组织关系！</p>
+						<p title="{{x.OrganRelation}}">{{PcService.subStrDescribe(x.OrganRelation,100)}}</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+		<!--<div class="panel-footer">
+			<div class="row">
+				<div class="col-lg-12">
+					<button class="btn btn-default-focus" ng-click="printMyResume()">打 印</button>
+				</div>
+			</div>
+
+		</div>-->
+	</div>
+</div>
+<!-- END panel-->

@@ -1,0 +1,52 @@
+<div class="abs-center wd-xl">
+	<!-- START panel-->
+	<div class="p">
+		<img ng-src="{{user.picture}}" alt="Avatar" width="60" height="60" class="img-thumbnail img-circle center-block" />
+	</div>
+	<div class="panel widget b0">
+		<div class="panel-body">
+			<p class="text-center">请输入登录密码进行解锁：</p>
+			<form role="form" name="lockForm" ng-submit="unLockScreen()">
+				<div class="form-group has-feedback">
+					<input type="password" placeholder="请输入密码解锁" required name="lock_password" ng-model="lock.password" class="form-control" />
+					<span class="fa fa-lock form-control-feedback text-muted"></span>
+					<span ng-show="!lock.password && require" class="text-danger">请输入登录密码！</span>
+				</div>
+				<div class="clearfix">
+					<div class="pull-left mt-sm">
+						<a ui-sref="page.recover" class="text-muted">
+							<small>忘记密码？</small>
+						</a>
+					</div>
+					<div class="pull-right">
+						<!-- Change this button type to submit to send the form data-->
+						<button type="submit" class="btn btn-sm btn-primary">解 锁</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+	<!-- END panel-->
+	<div class="p-lg text-center">
+		<span>&copy;</span>
+		<span ng-bind="app.year"></span>
+		<span>-</span>
+		<span ng-bind="app.name"></span>
+		<br/>
+		<span ng-bind="app.description"></span>
+	</div>
+</div>
+<script type="text/javascript">
+	jQuery(document).ready(function() {
+		if(window.history && window.history.pushState) {
+			$(window).on('popstate', function() {　
+				/// 当点击浏览器的 后退和前进按钮 时才会被触发，
+				window.history.pushState('forward', null, '');
+				window.history.forward(1);
+			});
+		}　　　　　　　　　　 //
+		window.history.pushState('forward', null, '');
+		//在IE中必须得有这两行
+		window.history.forward(1);
+	});
+</script>

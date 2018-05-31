@@ -1,0 +1,129 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<form role="form" class="form-inline" ng-submit="fetchData()">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group multiline">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.name" placeholder="请输入姓名" class="form-control" />
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">搜 索</button>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group multiline">民族：
+						<select class="form-control" ng-options="x.Id as x.Name for x in nations" ng-change="fetchData()" ng-model="searchOption.nationality">
+						</select>
+					</div>
+					<div class="form-group multiline">性别：
+						<select class="form-control" ng-options="x.Id as x.Name for x in sexs" ng-change="fetchData()" ng-model="searchOption.sex">
+						</select>
+					</div>
+					<div class="form-group multiline">社保：
+						<select class="form-control" ng-options="x.Id as x.Name for x in socialSecuritys" ng-change="fetchData()" ng-model="searchOption.socialSecurity">
+						</select>
+					</div>
+					<div class="form-group multiline">党性：
+						<select class="form-control" ng-options="x.Id as x.Name for x in PartState" ng-change="fetchData()" ng-model="searchOption.state">
+						</select>
+					</div>
+					<div class="form-group multiline">人群类型：
+						<select class="form-control" ng-options="x.Id as x.Name for x in populations" ng-change="fetchData()" ng-model="searchOption.population">
+						</select>
+					</div>
+					<div class="pull-right custom-caret">
+						<i ng-class="toggleClass(togglePanel)" title="展开/收起" ng-click="togglePanel=!togglePanel" aria-hidden="true"></i>
+					</div>
+				</div>
+			</div>
+			<div class="row" ng-if="togglePanel">
+				<div class="col-lg-12">
+					<div class="form-group multiline">婚姻：
+						<select class="form-control" ng-options="x.Id as x.Name for x in maritals" ng-change="fetchData()" ng-model="searchOption.marital">
+						</select>
+					</div>
+					<div class="form-group multiline">年龄：
+						<input type="text" ng-model="searchOption.min" placeholder="最小年龄" class="form-control form-halfwidth" />&nbsp;-&nbsp;
+						<input type="text" ng-model="searchOption.max" placeholder="最大年龄" class="form-control form-halfwidth" />
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover" style="min-width:1600px;">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>民族</th>
+					<th>性别</th>
+					<th>政治面貌</th>
+					<th>学历</th>
+					<th>年龄</th>
+					<th>身份证号码</th>
+					<th>出生日期</th>
+					<th>联系电话</th>
+					<th>人群类型</th>
+					<th>婚姻</th>
+					<th>社保</th>
+					<th>居住地址</th>
+					<th>备注</th>
+					<th class="text-align">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{PcService.numberToText(x.Nationality,nations)}}</td>
+					<td>{{PcService.numberToText(x.Sex,sexs)}}</td>
+					<td>{{PcService.numberToText(x.PoliticalStatus,politicalStatus)}}</td>
+					<td>{{PcService.numberToText(x.Degree,degrees)}}</td>
+					<td>{{getItsAge(x.BirthDate)}}</td>
+					<td>{{x.IDCardNo}}</td>
+					<td>{{x.BirthDate|date:"yyyy-MM-dd HH:MM"}}</td>
+					<td>{{x.Phone}}</td>
+					<td>{{PcService.numberToText(x.Population,populations)}}</td>
+					<td>{{PcService.numberToText(x.MaritalStatus,maritals)}}</td>
+					<td>{{PcService.numberToText(x.SocialSecurity,socialSecuritys)}}</td>
+					<td>{{x.HouseGradePathName}}</td>
+					<td>{{x.Remarks}}</td>
+					<td>
+						<button class="btn btn-default" ng-click="editItem(x)">编 辑</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

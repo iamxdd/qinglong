@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>积分规则</title>
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" cg-busy="listbusyPromise">
+			<!--<header>
+				<p class="article-title">这里是标题</p>
+			</header>-->
+			<section class="content-section">
+			</section>
+		</div>
+		<script src="../app/js/zepto_1.2.0.js"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			var getNewsDetail = function(id, code, token) {
+				//alert(token);
+				var data = {
+					id: id,
+					code: code
+				};
+				var headers = token ? {
+					'Authorization': 'Bearer ' + token
+				} : null;
+				$.ajax({
+					headers: headers,
+					type: "get",
+					url: apiAddsi + "pt/pointrule",
+					dataType: 'json',
+					success: function(response) {
+						var Code = response.State.Code;
+						var Message = response.State.Message;
+						if(Code === 0) {
+							var Content = response.Content[0];
+							$(".content-section").html(Content.Description);
+							$(".article-title").html(Content.Name);
+						} else {
+							alert(Message);
+						}
+					},
+					error: function(xhr, type) {
+						console.log('Ajax error!');
+					}
+
+				});
+			};
+
+			getNewsDetail();
+		</script>
+	</body>
+
+</html>

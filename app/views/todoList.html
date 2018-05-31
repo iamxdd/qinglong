@@ -1,0 +1,185 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr ng-if="selectTab.Id===1">
+					<th>序号</th>
+					<th>信息名称</th>
+					<th>上报时间</th>
+					<th>上报人</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===2">
+					<th>序号</th>
+					<th>事项名称</th>
+					<th>事项类型</th>
+					<th>上报时间</th>
+					<th>目标位置</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===1">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<!--<td>{{x.CreatorName}}</td>-->
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>{{x.UploaderName||"加载中.."}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default" ng-bind="todoText(selectTab)"></button>
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===2">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{PcService.numberToText(x.ResourceType,ExtraResourceTypes)}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>{{x.PositonInfo||"加载中.."}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default" ng-bind="todoText(selectTab)"></button>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog createOne_multi-->
+<script type="text/ng-template" id="createOne_multi">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="listBusyPromise">
+		<form class="form-horizontal" ng-submit="formSubmit()">
+			<div class="form-group">
+				<label class="control-label col-lg-3">事项名称</label>
+				<div class="col-lg-9">
+					<div class="form-control">
+						{{PcService.subStrDescribe(baseInfos.Name,15)}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group" ng-repeat="field in _fieldsList">
+				<label class="control-label col-lg-3">{{field.nameDisplay}}</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-change="choseNextNode(field.value)" ng-disabled="field.editable" ng-required="field.required" ng-model="field.value" ng-options="x.Id as x.Name for x in field.opts"></select>
+				</div>
+			</div>
+			<!--普通节点-->
+			<div class="form-group" ng-if="_fieldsList[0].value===1" ng-repeat="field in _fieldsList">
+				<label class="control-label col-lg-3">下一节点</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="fieldsList[2][0].opts[0].Id" ng-options="x.Id as x.Name for x in fieldsList[2][0].opts"></select>
+				</div>
+			</div>
+			<!--线上临时民主协商-->
+			<div class="form-group" ng-if="_fieldsList[0].value===16" ng-repeat="field in _fieldsList">
+				<label class="control-label col-lg-3">选择议题</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="fieldsList[3][0].opts[0].Id" ng-options="x.Id as x.Name for x in fieldsList[3][0].opts"></select>
+				</div>
+			</div>
+			<!--线下临时民主协商-->
+			<div class="form-group" ng-if="_fieldsList[0].value===32" ng-repeat="field in _fieldsList">
+				<label class="control-label col-lg-3">选择相册</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="fieldsList[4][0].opts[0].Id" ng-options="x.Id as x.Name for x in fieldsList[4][0].opts"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-9"><button type="submit" class="btn btn-success">确 定</button>
+					<button type="button" ng-click="closeThisDialog(0)" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne_multi-->
+
+<!--关联表单-->
+<!--begin ngDialog formList-->
+<script type="text/ng-template" id="formList">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="listBusyPromise">
+		<form class="form-horizontal" ng-submit="formSubmit()">
+			<div class="form-group" ng-repeat="field in fieldsList">
+				<label class="control-label col-lg-3">{{field.nameDisplay}}</label>
+				<div class="col-lg-9" ng-if="field.editor==='normal'">
+					<div class="form-control">
+						{{PcService.subStrDescribe(field.value,30)}}
+					</div>
+				</div>
+				<div class="col-lg-9 form-inline" ng-if="field.editor==='select'">
+					<select class="form-control" ng-model="field.value" ng-options="x.Id as x.Name for x in field.opts"></select>
+					<button type="button" class="btn btn-info" ng-disabled="field.value===0" ng-click="seeFormDetail(field.value)">查看表单</button>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="control-label col-lg-3">关联表单</label>
+				<div class="col-lg-9">
+					<div class="form-control">
+						<select ng-options="x.Id as x.Name for x in formList"></select>
+					</div>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-9"><button type="submit" class="btn btn-success">确 定</button>
+					<button type="button" ng-click="closeThisDialog(0)" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog formList-->
+
+<!--begin ngDialog seeFormDetail-->
+<script type="text/ng-template" id="seeFormDetail">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" column="2" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog seeFormDetail-->

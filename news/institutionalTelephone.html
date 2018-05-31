@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>机构电话</title>
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" cg-busy="listbusyPromise">
+			<ul class="list-group">				
+			</ul>
+		</div>
+		<script src="../app/js/zepto_1.2.0.js"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			var listGroup = document.getElementsByClassName("list-group")[0];
+			var getNewsDetail = function(id, code, token) {
+				//alert(token);
+				var data = {
+					id: id,
+					code: code
+				};
+				var headers = token ? {
+					'Authorization': 'Bearer ' + token
+				} : null;
+				$.ajax({
+					headers: headers,
+					type: "get",
+					url: apiAdds3 + "information/organizationlist",
+					dataType: 'json',
+					success: function(response) {
+						var Code = response.State.Code;
+						var Message = response.State.Message;
+						if(Code === 0) {
+							var Content = response.Content;
+							var uls = "";
+							for(var i = 0; i < Content.length; i++) {
+								var cell = Content[i];
+								var li = '<li>' +
+									'<h5>' + cell.Name + '</h5>' +
+									'<p class="content-section"><b>' + cell.Telephone + '</b></p>' +
+									'<p class="content-section">' + cell.Describe + '</p>' +
+									'</li>';
+								uls += li;
+							}
+							listGroup.innerHTML = uls;
+						} else {
+							alert(Message);
+						}
+					},
+					error: function(xhr, type) {
+						console.log('Ajax error!');
+					}
+
+				});
+			};
+
+			getNewsDetail();
+		</script>
+	</body>
+
+</html>

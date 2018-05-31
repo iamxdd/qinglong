@@ -1,0 +1,53 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default ztree-new-Two" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row row-new">
+			<ul class="list">
+                <li class="Lititle">滨海家园管理平台分类设置</li>
+            </ul>
+			    <ul id="treeDemo" class="ztree"></ul>
+		</div>
+
+	</div>	
+</div>
+<!-- END panel-->
+<script type="text/ng-template" id="creatNewsTypes">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!-- 添加广告咨询 -->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="form-group _mycheckbox-inline" ng-repeat="field in Adnews">
+				<label class="control-label">{{field.nameDisplay}}</label>
+				<div ng-if="field.editor==='multiselect'" class="form-inline">
+						<div class="checkbox checkbox-inline c-checkbox" ng-repeat="x in field.opts">
+							<label>
+								<input type="checkbox" ng-model="x.Checked" ng-disabled="x.editable ?  true :false">
+								<span class="fa fa-check"></span> {{x.Name}}
+							</label>
+						</div>
+					</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-9">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" ng-click="closeDialog(0)" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>

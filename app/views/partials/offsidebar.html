@@ -1,0 +1,14 @@
+<!-- START Off Sidebar (right)-->
+<h3 class="text-center text-thin">社区院落切换</h3>
+<div ng-controller="AbnTestController" class="container-fluid">
+	<div class="alert alert-info">{{ output }}</div>
+	<div class="row">
+		<div>
+			<div class="pad20">
+				<span ng-if="doing_async">...加载中...</span>
+				<abn-tree tree-data="my_data" tree-control="my_tree" on-select="my_tree_handler(branch)" expand-level="2" initial-selection="{{app.layout.logoName}}"></abn-tree>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END Off Sidebar (right)-->

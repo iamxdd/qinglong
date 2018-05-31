@@ -1,0 +1,85 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-status">券类型：</label>
+						<select id="input-status" ng-change="fetchData()" ng-model='searchOption.couponType' class="form-control" ng-options='a.index as a.value for a in couponType'>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-status">状态：</label>
+						<select id="input-status" ng-change="fetchData()" ng-model='searchOption.shelfState' class="form-control" ng-options='a.index as a.value for a in shelfState'>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-keyword">时间：</label>
+						<input type="text" ng-model="searchOption.startAt" placeholder="创建开始时间" class="form-control" id="startAttime" />&nbsp;-&nbsp;
+						<input type="text" ng-model="searchOption.endAt" placeholder="创建结束时间" class="form-control" id="endAtAttime" />
+					</div>
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入商品名称或商品编号" class="form-control inputIn" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>名称</th>
+					<!-- <th>商品编号</th> -->
+					<th>券类型</th>
+					<th>店铺</th>
+					<th>状态</th>
+					<th>操作人</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td class="td-hiddens-name" title="{{x.Name}}" ng-click="seeDetail(x)">{{x.Name}}</td>
+					<!-- <td>{{x.Quantity}}</td> -->
+					<td>{{PcService.numberToText(x.CouponType,CouponTypes)}}</td>
+					<td>{{x.ShopName}}</td>
+					<td>
+						<span class="label" ng-class="tdClass(x.ShelfState)">{{PcService.numberToText(x.ShelfState,ShelfStates)}}</span>
+					</td>
+					<td>{{x.ShopMemberNickName }}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="seeDetail(x)" class="btn btn-primary">查看详情</button>
+
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->

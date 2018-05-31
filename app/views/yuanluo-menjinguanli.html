@@ -1,0 +1,76 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" placeholder="请输入组织名称" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>组织名称</th>
+					<th>上级组织</th>
+					<th>联系电话</th>
+					<th>描述</th>
+					<th>排序号</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>西林豫府</td>
+					<td>青龙社区</td>
+					<td>028-7412458</td>
+					<td>好，很好，非常好!</td>
+					<td>{{x.$index}}</td>
+					<td>2017-07-17</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn btn-success">启用/停用</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增组织</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

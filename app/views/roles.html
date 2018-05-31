@@ -1,0 +1,114 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-10 h4">角色列表</div>
+			<div class="col-lg-2 text-right">
+				<button class="btn btn-success" ng-click="creatOne()">新增角色</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>角色名称</th>
+					<th>角色标识</th>
+					<th>角色描述</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.Code}}</td>
+					<td>{{x.Description}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="configItem(x)" class="btn btn-default">配置菜单</button>
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}角色</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog configOne-->
+<script type="text/ng-template" id="configOne">
+	<div class="modal-header">
+		<h5 class="modal-title">配置角色菜单权限-{{roleName}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered myRoleTable">
+			<tr>
+				<th>菜单名称</th>
+				<th>菜单描述</th>
+				<th>权限展示</th>
+				<th class="text-center">操作</th>
+			</tr>
+			<tr ng-repeat="x in AllMenus">
+				<td>
+					<div class="checkbox c-checkbox"><label>
+                        <input type="checkbox" ng-change="showChildPermission(x)" ng-model="x.Flag">
+                        <span class="fa fa-check"></span> <!--{{x.Name}}-->{{x.StreetMenuName}}
+                     </label>
+					</div>
+				</td>
+				<td>{{x.Description}}</td>
+				<td>
+					<div ng-if="!x.Flag" class="checkbox checkbox-inline c-checkbox">暂无权限</div>
+					<div ng-if="x.Flag" class="checkbox checkbox-inline c-checkbox" ng-repeat="y in x.AllDoPermission">
+						<label>
+                        		<input type="checkbox" ng-model="y.Checked">
+                        		<span class="fa fa-check"></span> {{y.Name}}
+                     		</label>
+					</div>
+				</td>
+				<td class="text-center">
+					<button type="button" ng-click="saveMenuPermession(x)" class="btn btn-success">保存</button>
+				</td>
+			</tr>
+			<!--<tr>
+				<td colspan="12"><button type="button" ng-click="saveAll(AllMenus)" class="btn btn-success">保存全部</button></td>
+			</tr>-->
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog configOne-->

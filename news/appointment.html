@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>预约办事</title>
+		<link rel="stylesheet" type="text/css" href="../app/css/bootstrap.css" />
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" cg-busy="listbusyPromise">
+			<!--<header>
+				<p class="article-title">预约办事</p>
+			</header>-->
+			<div class="my-form">
+				<div class="my-form-fixed">
+					<img src="../app/css/custom/loading-2.gif" style="opacity: .8;" />
+				</div>
+				<form name="myForm" class="form-horizontal">
+					<div class="form-group">
+						<select name="ReservationType" class="form-control">
+							<option value=0 selected="selected">请选择</option>
+							<option value=1>就医预约</option>
+							<option value=2>暂住证办理</option>
+							<option value=3>户口办理</option>
+						</select>
+					</div>
+					<label for="description">描述</label>
+					<div class="form-group">
+						<textarea name="Describe" placeholder="预约描述" class="form-control my-area" id="description"></textarea>
+					</div>
+					<div class="form-group my-fixed">
+						<div class="col-xs-6">
+							<button type="button" onclick="cancelForm()" class="btn btn-default btn-block">取 消</button>
+						</div>
+						<div class="col-xs-6">
+							<button type="button" onclick="mySubmit()" class="btn btn-success btn-block">确 定</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</div>
+		<script src="../app/js/zepto_1.2.0.js"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			var connectWebViewJavascriptBridge = function(callback) {
+				if(window.WebViewJavascriptBridge) {
+					callback(WebViewJavascriptBridge)
+				} else {
+					document.addEventListener('WebViewJavascriptBridgeReady',
+						function() {
+							callback(WebViewJavascriptBridge)
+						},
+						false
+					);
+				}
+			};
+
+			connectWebViewJavascriptBridge(function(bridge) {
+				bridge.init(function(message, responseCallback) {
+					var data = {
+						'Javascript Responds': '测试中文!'
+					};
+					responseCallback(data);
+				});
+
+				bridge.registerHandler("functionInJs", function(data, responseCallback) {
+					var responseData = "Javascript Says Right back aka!";
+					responseCallback(responseData);
+				});
+			});
+			
+			var token = "";
+			var myFormFixed = document.getElementsByClassName("my-form-fixed")[0];
+			//获取token
+			var getToken = function(t) {
+				if(!token) {
+					token = t;
+				}
+			};
+
+			//重置表单
+			var cancelForm = function() {
+				var myForm = document.forms["myForm"];
+				myForm.Describe.value = "";
+				myForm.ReservationType.value = 0;
+				window.WebViewJavascriptBridge.callHandler('submitFromWeb', {}, function(responseData) {});
+			};
+
+			//提交表单
+			var mySubmit = function() {
+				var myForm = document.forms["myForm"];
+				var Describe = myForm.Describe.value;
+				var ReservationType = myForm.ReservationType.value;
+				if(!Describe) {
+					alert("请选择预约类型!");
+					return;
+				}
+				if(!ReservationType) {
+					alert("描述不能为空!");
+					return;
+				}
+				var data = {
+					Describe: Describe,
+					ReservationType: ReservationType
+				};
+				var headers = token ? {
+					'Authorization': 'Bearer ' + token
+				} : null;
+
+				setTimeout(function() {
+					if(myFormFixed.style.display === "block") {
+						alert("请求超时！");
+						myFormFixed.style.display = "none";
+					}
+				}, 10000);
+				myFormFixed.style.display = "block";
+				$.ajax({
+					headers: headers,
+					type: "post",
+					url: apiAdds3 + "information/addreservation",
+					data: data,
+					//dataType: 'json',
+					success: function(response) {
+						var Code = response.State.Code;
+						var Message = response.State.Message;
+						if(Code === 0) {
+							alert("恭喜您，预约成功!");
+							myFormFixed.style.display = "none";
+							setTimeout(cancelForm, 3000);
+						} else {
+							alert(Message);
+							myFormFixed.style.display = "none";
+							setTimeout(cancelForm, 3000);
+						}
+					},
+					error: function(xhr, type) {
+						alert('Ajax error!');
+						myFormFixed.style.display = "none";
+					}
+
+				});
+			};
+		</script>
+	</body>
+
+</html>

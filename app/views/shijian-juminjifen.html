@@ -1,0 +1,124 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.name" placeholder="请输入居民姓名" class="form-control" />
+					</div>
+					<!--<div class="form-group">
+						<label for="scores-type">归属类别：</label>
+						<select id="scores-type" class="form-control" ng-model="scores.Type" ng-options="x.Id as x.Name for x in ofTypes"></select>
+					</div>-->
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="configPointClassify()" class="btn btn-success">配置积分分类</button>
+			</div>
+			<!--<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增初始积分</button>
+			</div>-->
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>居民姓名</th>
+					<th>账号</th>
+					<th>积分总数</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<!--<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Account.NickName}}</td>
+					<td>{{x.Account.Name}}</td>
+					<td>{{x.PointNum}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">调 整</button>
+						<button type="button" ng-click="detailItem(x)" class="btn btn-success">明 细</button>
+					</td>
+				</tr>-->
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.User.NickName}}</td>
+					<td>{{x.User.Name}}</td>
+					<td>{{x.CurrentNumber}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">调 整</button>
+						<button type="button" ng-click="detailItem(x)" class="btn btn-success">明 细</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog detailOne-->
+<script type="text/ng-template" id="detailOne">
+	<div class="modal-header">
+		<h5 class="modal-title">积分明细</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>更新时间</th>
+				<!--<th>更新方式</th>-->
+				<th>更新分数</th>
+				<!--<th>剩余分数</th>-->
+				<th>更新描述</th>
+			</tr>
+			<tr ng-repeat="x in fieldsList">
+				<td>{{x.$index}}</td>
+				<td>{{x.UpdatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+				<!--<td>{{x.typeName}}</td>-->
+				<td ng-class="{'text-success':x.Number>0,'text-danger':x.Number<0}">{{x.Number}}</td>
+				<!--<td>{{x.LeftNum}}</td>-->
+				<td>{{x.SourceDescription}}</td>
+			</tr>
+		</table>
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog detailOne-->
+
+<!--begin ngDialog adjustment-->
+<script type="text/ng-template" id="adjustment">
+	<div class="modal-header">
+		<h5 class="modal-title">调整积分</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList[1]" close-dialog="closeThisDialog(0)" form-submit="adustFormSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog adjustment-->

@@ -1,0 +1,340 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group multiline" ng-repeat="x in screenfields">
+						<label for="input-{{x.name}}">{{x.nameDisplay}}：</label>
+						<input ng-if="x.editor==='normal'" id="input-{{x.name}}" ng-model="x.value" type="text" placeholder="请输入项目议题" class="form-control" />
+						<select ng-if="x.editor==='select'" id="input-{{x.name}}" ng-model="x.value" class="form-control" ng-options="e.Id as e.Name for e in x.opts"></select>
+						<div ng-controller="minzhuxieshangCtrl" class="inline-formlabel" ng-if="x.editor==='double-datePick'" class="double-input">
+							<div class="form-group">
+								<input class="datepicker form-control" ng-model="x.value1" type="text" id="datetimeStart" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,0)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value1" is-open="opened[0]" max-date="x.value2" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+							<div class="inline-formlabel">- &nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="form-group">
+								<input class="datepicker form-control" ng-model="x.value2" type="text" id="datetimeEnd" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,1)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value2" is-open="opened[1]" min-date="x.value1" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+						</div>
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">查询</button>
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">创建协商项目</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>项目议题</th>
+					<th>议事时间</th>
+					<th>议事人员</th>
+					<th>是否公示</th>
+					<th>协商状态</th>
+					<th>
+						<div class="text-center">子议题</div>
+					</th>
+					<th>创建人</th>
+					<th>创事时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.ValidStartTime|date:"yyyy-MM-dd HH:mm"}}<br />{{x.ValidEndTime|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>张三，李四，王五</td>
+					<td>是</td>
+					<td>协商中</td>
+					<td>
+						<div class="text-align">
+							<button class="btn btn-link" ng-click="subIssuesItem(x)">查看</button>
+						</div>
+					</td>
+
+					<td>王小五</td>
+					<td>17-07-16 14:00</td>
+					<td class="text-center">
+						<button type="button" ng-click="seeItem(x)" class="btn btn-default">项目概要</button>
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">议事过程</button>
+						<button type="button" ng-click="resultlItem(x)" class="btn btn-success">议事结果</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>-->
+		<form class="form-horizontal" ng-submit="createFromSubmit()">
+			<div class="form-group">
+				<label class="control-label col-lg-2">议题</label>
+				<div class="col-lg-10">
+					<input type="text" ng-disabled="editable" ng-model="negObject.Title" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">议事时间</label>
+				<div class="col-lg-10">
+					<input type="text" ng-disabled="editable" id="startAt" ng-model="negObject.StartAt" class="datepicker form-control form-halfwidth inline" />&nbsp;-&nbsp;
+					<input type="text" ng-disabled="editable" id="endAt" ng-model="negObject.EndAt" class="datepicker form-control form-halfwidth inline" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">议事地点</label>
+				<div class="col-lg-10">
+					<input type="text" ng-disabled="editable" ng-model="negObject.Address" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">描述</label>
+				<div class="col-lg-10">
+					<textarea rows="6" ng-disabled="editable" ng-model="negObject.Describe" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">投票箱</label>
+				<div class="col-lg-10">
+					<select ng-disabled="editable" ng-options="x.Id as x.Name for x in BallotBoxList" class="form-control form-halfwidth" ng-model="negObject.BallotBox"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">评分表</label>
+				<div class="col-lg-10">
+					<select ng-disabled="editable" ng-options="x.Id as x.Name for x in ScoringTableList" class="form-control form-halfwidth" ng-model="negObject.ScoringTable"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">人员</label>
+				<div class="col-lg-10">
+					<select ng-disabled="editable" ng-options="x.Id as x.Name for x in MemberList" class="form-control form-halfwidth" ng-model="negObject.Member">
+					</select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2"></label>
+				<div class="col-lg-10">
+					<label class="inline-formlabel">
+						<input ng-checked="negObject.isPublic" value="1" type="checkbox" />议事结果需要公示
+					</label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2"></label>
+				<div class="col-lg-10">
+					<button type="submit" class="btn btn-success">保存项目</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog detailOne-->
+<script type="text/ng-template" id="detailOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>-->
+		<table class="table table-bordered">
+
+			<thead>
+				<tr>
+					<th>顺序</th>
+					<th>发言人</th>
+					<th>内容</th>
+					<th>发言时间</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="!wordsList||wordsList.length===0">
+					<td colspan="9">暂无数据</td>
+				</tr>
+				<tr ng-repeat="x in wordsList">
+					<td>{{x.$index}}</td>
+					<td>王小五</td>
+					<td>王小五的发言内容</td>
+					<td>2017-07-16 14:0{{$index+1}}</td>
+					<td><button class="btn btn-danger" ng-click="delete_Item(x)">删 除</button></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</script>
+<!--end ngDialog detailOne-->
+
+<!--begin ngDialog resultOne-->
+<script type="text/ng-template" id="resultOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>-->
+		<div class="row">
+			<div class="col-lg-12">
+				<div id="panelChart1" class="panel panel-default">
+					<div class="panel-heading">
+						<!--<paneltool tool-collapse="tool-collapse" tool-dismiss="tool-dismiss"></paneltool>-->
+						<div class="panel-title">投票结果</div>
+					</div>
+					<div collapse="panelChart2" class="panel-wrapper">
+						<div class="panel-body">
+							<flot dataset="barData" options="barOptions" height="100px"></flot>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-12">
+				<div id="panelChart2" class="panel panel-default">
+					<div class="panel-heading">
+						<!--<paneltool tool-collapse="tool-collapse" tool-dismiss="tool-dismiss"></paneltool>-->
+						<div class="panel-title">投票总结</div>
+					</div>
+					<div collapse="panelChart2" class="panel-wrapper">
+						<div class="panel-body">
+							<div class="" style="height:100px">
+								超过60%赞成，协商结果为：通过！
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog resultOne-->
+
+<!--事项模板子议题-->
+<!--begin ngDialog subIssues-->
+<script type="text/ng-template" id="subIssues">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>名称</th>
+				<th>描述</th>
+				<th>有效时间范围</th>
+				<th>备注</th>
+				<th>
+					<div class="text-center">投票</div>
+				</th>
+				<th>
+					<div class="text-center">评分</div>
+				</th>
+			</tr>
+			<tr ng-repeat="x in subIssuesList">
+				<td>Data</td>
+				<td>Data</td>
+				<td>Data</td>
+				<td>Data</td>
+				<td>
+					<div class="text-center">
+						<button class="btn btn-link" ng-click="seeVote(x)">查 看</button>
+					</div>
+				</td>
+				<td>
+					<div class="text-center">
+						<button class="btn btn-link" ng-click="seeScore(x)">查 看</button>
+					</div>
+				</td>
+			</tr>
+		</table>
+	</div>
+</script>
+<!--end ngDialog subIssues-->
+
+<!--voteAction-->
+
+<!--begin ngDialog voteAction-->
+<script type="text/ng-template" id="voteAction">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>投票人</th>
+				<th>投票结果</th>
+				<th>投票开始时间</th>
+				<th>投票结束时间</th>
+			</tr>
+			<tr ng-repeat="x in voteList">
+				<td>{{x.$index}}</td>
+				<td>王小{{$index+1}}</td>
+				<td>赞成</td>
+				<td>17-07-17 14:00</td>
+				<td>17-08-17 14:00</td>
+			</tr>
+		</table>
+		<div class="panel-body">
+			<div class="custom-bar">
+				<flot dataset="barData" options="barOptions" height="100px"></flot>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog voteAction-->
+
+<!--scoreAction-->
+<!--begin ngDialog scoreAction-->
+<script type="text/ng-template" id="scoreAction">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>评分理由</th>
+				<th>分数</th>
+				<th>评分人</th>
+				<th>评分时间</th>
+			</tr>
+			<tr ng-repeat="x in scoreList">
+				<td>{{x.$index}}</td>
+				<td>我愿意</td>
+				<td>{{$index+1}}0</td>
+				<td>王小{{$index+1}}</td>
+				<td>17-07-17 14:00</td>
+			</tr>
+		</table>
+	</div>
+</script>
+<!--end ngDialog scoreAction-->

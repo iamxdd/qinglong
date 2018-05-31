@@ -1,0 +1,78 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入关键词" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label for="inputPosition">类型：</label>
+						<select  id="inputPosition"  ng-model= 'searchOption.classN' class="form-control"  ng-options='a.index as a.value for a in classSelect'>
+						</select>	
+					</div>
+					
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+			
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>标题</th>
+					<th>类型</th>
+					<th>发布人</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.InspectorName}}</td>
+					<td>{{x.UploadMemberNickName}}</td>
+					<td>{{x.Description}}</td>
+					<td class="text-center">
+						<button  ng-click="checkData(x)" class="btn btn-primary">查看详情</button>
+						<button  ng-click="recyleData(x)" class="btn btn-primary">恢复</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}积分事件</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

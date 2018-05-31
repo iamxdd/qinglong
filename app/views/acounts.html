@@ -1,0 +1,94 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-10 h4">用户列表</div>
+			<div class="col-lg-2 text-right">
+				<!--<button class="btn btn-success" ng-click="creatOne()">新增角色</button>-->
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>账号</th>
+					<th>姓名</th>
+					<th>电话</th>
+					<!--<th>身份证ID</th>-->
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.LoginName}}</td>
+					<td>{{x.NickName}}</td>
+					<td>{{x.Phone}}</td>
+					<!--<td>{{x.IDCareNo}}</td>-->
+					<td class="text-center">
+						<button type="button" ng-click="seeItem(x)" class="btn btn-default">查看角色</button>
+						<button type="button" ng-click="configureItem(x)" class="btn btn-info">分配角色</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<!--<div class="pull-right">
+				<button class="btn btn-default" ng-click="addRoles()">新增角色</button>
+			</div>-->
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" ng-submit="submitRoles()">
+			<div class="form-group col-lg-12">
+				<label ng-if="(allOwerList.length===0||!allOwerList)&&isSee">暂无任何角色!</label>
+			</div>
+			<div ng-if="!isSee" class="form-group col-lg-6" ng-repeat="x in allRolesList">
+				<div class="checkbox c-checkbox">
+					<label>
+                        <input ng-model="x.HasThisRoles" type="checkbox" ng-checked="x.HasThisRoles" ng-true-value="true" ng-false-value="false">
+                        <span class="fa fa-check"></span>{{x.Name}}
+					</label>
+				</div>
+			</div>
+			<div ng-if="isSee" class="form-group col-lg-6" ng-repeat="x in allOwerList">
+				<div class="checkbox c-checkbox">
+					<label>
+                        {{x.RoleName}}
+					</label>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+			<div class="form-group">
+				<div class="col-lg-12">
+					<button class="btn btn-success" type="submit">确 定</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->

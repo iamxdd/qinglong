@@ -1,0 +1,21 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer ztree-new">
+		<div class="row row-new">
+			<ul class="list">
+                <li class="Lititle">基金类型和慈善管理分类设置</li>
+            </ul>
+			 <ul id="treeDemo" class="ztree"></ul>
+		</div>
+	</div>	
+</div>
+<!-- END panel-->
+<script type="text/ng-template" id="creatNewsTypes">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>

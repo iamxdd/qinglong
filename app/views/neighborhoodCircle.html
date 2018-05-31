@@ -1,0 +1,214 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.name" placeholder="请输入名称搜索" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label for="inputPosition">状态：</label>
+						<select id="inputPosition" ng-model='searchOption.Openstate' class="form-control" ng-change="fetchData()" ng-options='a.Id as a.Name for a in statusSlect'>
+						</select>
+					</div>
+
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button ng-click="creatOne()" class="btn btn-success">添加</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>名称</th>
+					<th>圈子ID</th>
+					<th>负责人</th>
+					<th>核实人</th>
+					<th>标签</th>
+					<th>创建时间</th>
+					<th>状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td class="td-hiddens" title="{{x.Name}}">{{x.Name}}</td>
+					<td>{{x.IDCode}}</td>
+					<td>{{x.OwnerName}}</td>
+					<td>{{x.CheckName}}</td>
+					<td class="td-hiddens" title="{{x.Tags}}">{{x.Tags}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+					<td>{{PcService.numberToText(x.OpenState,statusSlect)}}</td>
+					<td>
+						<button ng-click="editItem(x)" class="btn btn-default">修改</button>
+						<button ng-click="seeDetails(x)" class="btn btn-default">详情</button>
+						<button type="button" ng-if="x.OpenState==1 || x.OpenState==2" ng-click="toggleItem(x)" class="btn" ng-class="isToggle(x)" ng-bind="toggleText(x)" ng-disabled="isDisabled(x)"></button>
+						<button type="button" ng-click="dissolve(x)" class="btn btn-primary" ng-disabled="isDisabled(x)" ng-bind="x.OpenState==3 ? '已解散': '解散' "></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog 添加 createOne-->
+<script type="text/ng-template" id="creatOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise" id="add">
+		<form class="form-horizontal">
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">名称</label>
+				<div class=" col-lg-8">
+					<input type="text" ng-model="Resident.Name" class="form-control cleaAdd" placeholder="请输入名称" />
+				</div>
+			</div>
+
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">负责人</label>
+				<div class=" col-lg-8">
+
+					<input type="text" ng-model="Resident.value" id="chargePeple" ng-keyup="getPersonInCharge(1,Resident.value)" ng-blur="hideLi()" class="form-control cleaAdd" placeholder="请输入负责人名字查询" />
+					<ul class="ulInput ulInputadd">
+						<li ng-repeat="x in ulInputData" ng-click='fillpersonInCharge(x)'>{{x.Name}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">关联</label>
+				<div class=" col-lg-8">
+					<select id="input-status" ng-model='NeSelectinput' class="form-control" ng-options='a.Id as a.Name for a in NeSelect' ng-disabled="true">
+						</select>
+				</div>
+
+			</div>
+			<div class="form-group col-lg-12" id="neighborhoodForm">
+				<label class="control-label col-lg-2">标签</label>
+				<div id="btn-add">
+					<div class=' col-lg-2  neiber-label'>
+						<input type="text" class="form-control TagsName cleaAdd" placeholder="请输入" maxlength="50" />
+					</div>
+				</div>
+				<div class=" col-lg-2 neiber-label">
+					<span class="add-btn" ng-click="addTags()">+</span>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="formSubmit()">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog  修改-->
+<script type="text/ng-template" id="createEditor">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal">
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">名称</label>
+				<div class=" col-lg-8">
+					<input type="text" ng-model="quanzi.Name" id="quanziName" class="form-control" placeholder="请输入名称" />
+				</div>
+			</div>
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">负责人</label>
+				<div class=" col-lg-8">
+					<input type="text" ng-model="quanzine.OwnerName" class="form-control" disabled="disabled" />
+				</div>
+
+			</div>
+			<div class="form-group col-lg-6">
+				<label class="control-label col-lg-4">关联</label>
+				<div class=" col-lg-8">
+					<select id="input-status" ng-model='NeSelectinput' class="form-control" ng-options='a.Id as a.Name for a in NeSelect' ng-disabled="true">
+						</select>
+				</div>
+
+			</div>
+			<div class="form-group col-lg-6">
+				<div class="col-lg-4">
+					<div class="checkbox checkbox-inline c-checkbox">
+						<label>
+							<input ng-checked="chk" type="checkbox"  ng-click="isClick()" id="chbox" ng-model="chk">
+							<span class="fa fa-check"></span> 转让
+						</label>
+					</div>
+				</div>
+				<!--<div class="col-lg-8">
+					<input type="text" required="required" ng-model="ResidentTwo.pepele"  class="form-control" ng-blur="hideLiTwo()" ng-keyup="getPersonInChargeTwo(2,ResidentTwo.pepele)" />
+					<ul class="ulInputTwo">
+						<li ng-repeat="x in ulInputDataTwo" ng-click='fillpersonInChargeTwo(x)'>{{x.Name}}</li>
+					</ul>
+				</div>-->
+					<div ng-if="chk" ng-repeat="field in fieldsList" ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+					<select ng-if="field.editor==='search-select'" ng-disabled="field.editable" chosen="" ng-model="field.value" id="funda" ng-required="field.required" class="form-control chosen-select" ng-change="selectTypeSeach(field.value)" ng-options="x.Id as x.Name for x in field.opts">
+
+					</select>
+				</div>
+			
+			</div>
+<div class="clearfix">
+
+			</div>
+			<div class="form-group " id="neighborhoodForm">
+				<label class="control-label col-lg-2">标签</label>
+				<div class=" col-lg-2 neiber-label" ng-repeat="x in TagsList track by $index" ng-if="TagsList && TagsList.length!=0">
+					<input type="text" class="form-control TagsName" ng-model="x" />
+				</div>
+				<div id="btn-add">
+					<!--<div class=' col-lg-2  neiber-label'>
+						<input type="text" class="form-control TagsName" placeholder="请输入" maxlength="4" />
+					</div>-->
+				</div>
+				<div class=" col-lg-2 neiber-label">
+
+					<span class="add-btn" ng-click="addTags()">+</span>
+				</div>
+
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="formSubmit()">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+
+</script>
+<!--end ngDialog createEditor-->
+

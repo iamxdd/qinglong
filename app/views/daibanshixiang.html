@@ -1,0 +1,235 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+	<!--<div class="pull-right">
+		<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+	</div>-->
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<!--<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<select class="form-control" ng-model="NodeWorkerType" ng-options="x.Id as x.Name for x in NodeWorkerTypes">
+						</select>
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>-->
+			</div>
+			<!--<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+			</div>-->
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr ng-if="selectTab.Id===1">
+					<th>序号</th>
+					<th>信息名称</th>
+					<!--<th>上报人</th>-->
+					<th>上报时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===2">
+					<th>序号</th>
+					<th>事项名称</th>
+					<th>事项类型</th>
+					<th>上报时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===1">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<!--<td>{{x.CreatorName}}</td>-->
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">查 看</button>
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===2">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{PcService.numberToText(x.ResourceType,ExtraResourceTypes)}}</td>				
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">查 看</button>
+						<!--<button type="button" ng-click="editItem(x)" class="btn btn-default">立即处理</button>-->
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===3">
+					<td>{{$index+1}}</td>
+					<td>{{x.WorkName}}</td>
+					<td>{{PcService.numberToText(x.ResourceType,ExtraResourceTypes)}}</td>
+					<td>{{x.NoderName}}</td>
+					<td>{{x.WorkName}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">查 看</button>
+						<!--<button type="button" ng-click="editItem(x)" class="btn btn-default">处理协商</button>-->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="_createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}-{{preTItie}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" ng-submit="formSubmit()">
+			<div class="form-group" ng-repeat="field in fieldsList" ng-if="!field.ifHave">
+				<label class="control-label col-lg-2">{{field.nameDisplay}}</label>
+				<div class="col-lg-10">
+					<input ng-if="field.editor==='normal'" class="form-control" ng-model="field.value" type="text" />
+					<select ng-if="field.editor==='select'" class="form-control" ng-model="field.value" ng-change="field.changeListen(this,field.value)" ng-options="x.Id as x.Name for x in field.opts"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-9">
+					<button type="submit" class="btn btn-success">确 定</button>
+					<button type="button" ng-click="closeDialog(0)" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+		</form>
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>-->
+	</div>
+</script>
+<!--end ngDialog createOne-->
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}-{{preTItie}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog seeOne-->
+<script type="text/ng-template" id="seeOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="form-horizontal" cg-busy="ngDialogPromise">
+			<div class="form-group" ng-repeat="x in fieldsList">
+				<label class="control-label col-lg-3">{{x.nameDisplay}}</label>
+				<div class="col-lg-9">
+					<div class="form-control">
+						{{x.value}}
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="closeDialog(0)">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog seeOne-->
+
+<!--begin ngDialog Photoes-->
+<script type="text/ng-template" id="Photoes">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}-{{preTItie}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="form-horizontal" cg-busy="ngDialogPromise">
+			<h5>相册名称：{{ItemContent.PhotoAlbumName}}</h5>
+			<ul class="list-group my-list-group">
+				<li class="list-group-item col-lg-4" ng-repeat="x in ItemContent.Photoes">
+					<img src="{{x.PhotoUrl}}" />
+				</li>
+				<div class="clearfix">
+				</div>
+			</ul>
+			<h5>位置信息：{{ItemContent.SeatAddress}}</h5>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="closeDialog(0)">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog Photoes-->
+
+<!--begin ngDialog seeOne-->
+<script type="text/ng-template" id="listOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}-{{preTItie}}</h5>
+	</div>
+	<div class="row-flush">
+		<div class="pull-right">
+			<button class="btn btn-link" ng-click="createAlbum()">新增{{TitleName}}</button>
+		</div>
+		<div class="clearfix">
+
+		</div>
+	</div>
+
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>名称</th>
+				<th>创建时间</th>
+				<th class="text-center">操作</th>
+			</tr>
+			<tr>
+				<td colspan="10" ng-if="Photoes.length===0||!Photoes">暂无任务{{TitleName}}！</td>
+			</tr>
+			<tr ng-repeat="x in Photoes">
+				<td>{{x.$index}}</td>
+				<td>{{x.Name}}</td>
+				<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+				<td class="text-center">
+					<!--deleteAlbum-->
+					<button class="btn btn-default" ng-click="AlbumManage(x)">照片管理</button>
+					<button class="btn btn-default" ng-if="TitleName==='相册'" ng-click="editAlbum(x)">修 改</button>
+					<button class="btn btn-danger" ng-click="deleteAlbum(x)">删 除</button>
+
+				</td>
+			</tr>
+		</table>
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+					</paging>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog seeOne-->

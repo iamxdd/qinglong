@@ -1,0 +1,21 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<i class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+		<h4 class="text-center">
+			<div class="pull-right">
+				<button class="btn btn-default" ng-disabled="News.State!==1 && News.State!==2" ng-click="clickItem(News)" ng-bind="PcService.numberToText(News.State,newsstates)"></button>				
+			</div>{{News.Title}}</h4>
+		<div class="text-center news-baners" style="border-bottom: solid 1px #ddd;padding-bottom: 10px;margin-bottom: 15px;">
+			<span>发布人：{{News.PublishUserName}}</span>
+			<span>发布时间:{{News.PublishAt|date:"yyyy-MM-dd HH:mm"}}</span>
+			<span>类型: {{News.WorkTypeName}}</span>
+		</div>
+		<div class="text-center" ng-if="News.Images">
+			<img style="max-width: 100%;max-height: 300px;" ng-src="{{News.Images}}" />
+		</div>
+		<div style="text-indent: 2em;" ng-bind-html="News.Content"></div>
+	</div>
+</div>
+<!-- END panel-->

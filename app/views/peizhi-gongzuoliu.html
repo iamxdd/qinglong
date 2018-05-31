@@ -1,0 +1,207 @@
+<h3>{{$state.current.title}}</h3>
+<ul class="breadcrumb custor-breadcrumb">
+	<li ng-repeat="x in checkedGroup" ng-class="{active:x.Active}" ng-if="$index<=checkedItem.Id-1">
+		<a ng-click="checked(x)" ng-disabled="x.disabled">{{x.Name}}</a>
+	</li>
+</ul>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" ng-if="checkedItem.Id===1" class="form-inline" ng-submit="fetchData(checkedItem.Id)">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" ng-model="searchOption.value" type="text" placeholder="请输入流程名称" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right" ng-if="!(list.length!==0 && checkedItem.Id===3)">
+				<button type="button" ng-click="creatOne(checkedItem.Id)" class="btn btn-success">新增{{toggleText(checkedItem.Id)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr ng-if="checkedItem.Id===1">
+					<th>序号</th>
+					<th>流程名称</th>
+					<th>描述</th>
+					<!--<th>备注</th>-->
+					<th class="text-center">状态</th>
+					<th>提交人</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="checkedItem.Id===2">
+					<th>序号</th>
+					<th>节点名称</th>
+					<th>通知类型</th>
+					<th>工作组</th>
+					<th>到期提醒(天)</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="checkedItem.Id===4">
+					<th>序号</th>
+					<th>积分事件名称</th>
+					<th>工作定义</th>
+					<th>积分数量</th>
+					<th>创建者</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="checkedItem.Id===3 && (WorkerType===1||WorkerType===0)">
+					<th>序号</th>
+					<th>工作名称</th>
+					<th>节点名称</th>
+					<th>审核状态</th>
+					<th>描述</th>
+					<th>备注</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="checkedItem.Id===3 && WorkerType===2">
+					<!--1：上传表单-->
+					<th>序号</th>
+					<th>工作名称</th>
+					<th>节点名称</th>
+					<!--<th>表单类型</th>-->
+					<th>描述</th>
+					<th>备注</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="10">暂无任何数据！</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===1" ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.Description}}</td>
+					<td class="text-center">
+						<div class="label" ng-class="PcService.toggleLabelClass(x)">{{PcService.stateText(x)}}</div>
+					</td>
+					<td>{{x.CreatorNickName}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<a ng-click="configItem(x)" type="button" class="btn btn-default">配置节点</a>
+						<button type="button" ng-click="editItem(x,checkedItem.Id)" class="btn btn-default">修 改</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn" ng-class="PcService.toggleClass(x)" ng-bind="PcService.toggleText(x)"></button>
+					</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===2" ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{PcService.numberToText(x.NotifyType,WorkflowNodeNotifyType)}}</td>
+					<td>{{x.GroupName}}</td>
+					<td>{{PcService.timeDo(x.NotifyBeforeVaildEndTime)}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<a ng-click="configNode(x)" type="button" class="btn btn-default">配置工作</a>
+						<button type="button" ng-click="editItem(x,checkedItem.Id)" class="btn btn-default">修 改</button>
+					</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===3 && WorkerType===1" ng-repeat="x in list">
+					<!--1:审核-->
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.NodeName}}</td>
+					<td>{{PcService.numberToText(x.AuditState,AuditStates)}}</td>
+					<td>{{x.Description}}</td>
+					<td>{{x.Note}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="configScore(x,checkedItem.Id)" class="btn btn-default">积分规则</button>
+						<button type="button" ng-click="editItem(x,checkedItem.Id)" class="btn btn-default">修 改</button>
+					</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===3 && WorkerType===2" ng-repeat="x in list">
+					<!--2:普通-->
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.NodeName}}</td>
+					<td>{{x.Description}}</td>
+					<td>{{x.Note}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="configScore(x,checkedItem.Id)" class="btn btn-default">积分规则</button>
+						<button type="button" ng-click="editItem(x,checkedItem.Id)" class="btn btn-default">修 改</button>
+					</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===4" ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.WorkName}}</td>
+					<td>{{x.PointAmount}}</td>
+					<td>{{x.CreatorNickName}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x,checkedItem.Id)" class="btn btn-default">修 改</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center" ng-if="checkedItem.Id===1||checkedItem.Id===2">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}{{tabTitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="form-horizontal" ng-if="create && index === 3">
+			<div class="form-group">
+				<label class="control-label col-lg-3">节点工作类型</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-change="choseNodeWorkerType(newNodeWorkerType)" ng-model="newNodeWorkerType" ng-options="x.Id as x.Name for x in NodeWorkerTypes"></select>
+				</div>
+			</div>
+		</div>
+		<div class="form-horizontal" ng-if="index === 3 && newNodeWorkerType===2">
+			<div class="form-group">
+				<label class="control-label col-lg-3">外部资源类型</label>
+				<div class="col-lg-9 mycheckbox-inline">
+					<div class="checkbox checkbox-inline c-checkbox" ng-repeat="x in ExtraResourceTypes">
+						<label>
+                        		<input type="checkbox" ng-change="disabledX(x,ExtraResourceTypes)" ng-disabled="x.Disabled" ng-model="x.Checked">
+                        		<span class="fa fa-check"></span> {{x.Name}}
+                     		</label>
+					</div>
+					<!--<select class="form-control" ng-model="ExtraResourceType" ng-options="x.Id as x.Name for x in ExtraResourceTypes"></select>-->
+				</div>
+			</div>
+
+		</div>
+		<div class="form-horizontal" ng-if="create && index === 4">
+			<div class="form-group">
+				<label class="control-label col-lg-3">可绑定属性名称</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-change="choseWorkerPropertyName(param.WorkerPropertyName)" ng-model="param.WorkerPropertyName" ng-options="x.PropertyName as x.EnumCnName for x in moreAndMoreList"></select>
+				</div>
+			</div>
+
+			<div class="form-group" ng-if="moreAndMoreListChild.length!==0">
+				<label class="control-label col-lg-3">可绑定属性值</label>
+				<div class="col-lg-9">
+					<select class="form-control" ng-model="param.WorkerPropertyValue" ng-options="x.IntegerValue as x.DisplayName for x in moreAndMoreListChild"></select>
+				</div>
+			</div>
+		</div>
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

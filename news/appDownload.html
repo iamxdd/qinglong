@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html ng-app="myApp">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>App下载</title>
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" style="background: #fff;">
+			<div class="my-form-fixed">
+				<img src="../app/css/custom/loading-2.gif" style="opacity: .8;" />
+			</div>
+			<div style="text-align: center;margin-top: 15px">
+				<img style="max-width: 90%;" src="../app/img/down-load.jpg" />
+			</div>
+			<div style="text-align: center;margin-top: 20px;">
+				<img style="max-width: 90%;" src="../app/img/title.png" />
+			</div>
+			<div style="text-align: center;">
+				<div style="width: 80%;margin: 0 auto;">
+					<a href="#iOS" class="iOS"><img ng-app="" style="max-width: 100%; margin: 10px 0;" src="../app/img/down-1.png" /></a>
+				</div>
+				<div style="width: 80%;margin: 0 auto;">
+					<a href="#Android" class="Android"><img style="max-width: 100%; margin: 10px 0" src="../app/img/down-2.png" /></a>
+				</div>
+			</div>
+
+		</div>
+		<script src="js/jquery.min.js" type="text/javascript"></script>
+		<script src="js/browserDetective.js" type="text/javascript"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			var android_url = "";
+			var myFormFixed = document.getElementsByClassName("my-form-fixed")[0];
+			myFormFixed.style.display = "block";
+			$.ajax({
+				//headers: headers,
+				type: "get",
+				url: apiAdds6 + "project/getversion?code=ResidentApp",
+				//data: data,
+				dataType: 'json',
+				success: function(response) {
+					var Code = response.State.Code;
+					var Message = response.State.Message;
+					if(Code === 0) {
+						android_url = response.Content.DownloadUrl;
+						myFormFixed.style.display = "none";
+					} else {
+						alert(Message);
+						myFormFixed.style.display = "none";
+					}
+				},
+				error: function(xhr, type) {
+					alert('Ajax error!');
+					myFormFixed.style.display = "none";
+				}
+
+			});
+
+			//iOS下载按钮判断
+			$('.iOS').click(function() {
+				if($(document).isIOS()) {
+					if($(document).isWeixin()) {
+						$('.weixin-tip').show();
+					} else if($(document).isSafari()) {
+						alert('IOS端正在开发中.. 尽请期待！');
+						return;
+						window.location.href = 'https://itunes.apple.com/us/app/cheng-hui-guang/id1151306854?mt=8';
+					} else {
+						alert('您当前并非苹果iOS系统！');
+					}
+				} else {
+					alert('您当前并非苹果iOS系统！');
+				}
+			});
+			//Android下载按钮判断
+
+			$('.Android').click(function() {
+				if($(document).isWeixin()) {
+					$('.weixin-tip').show();
+				} else {
+					if($(document).isAndroid()) {
+						if(android_url) {
+							window.location.href = android_url;
+						} else {
+							//alert("");
+							return;
+						}
+
+					} else {
+						alert('您当前并非Android系统！');
+					}
+				}
+			});
+		</script>
+	</body>
+
+</html>

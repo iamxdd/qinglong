@@ -1,0 +1,131 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+	<!--<div class="pull-right">
+		<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+	</div> ng-click="checked(x)"-->
+	<li ng-click="checked(x)" ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a>{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData(selectTab.Id)">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入信息名称" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+			<!--<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+			</div>-->
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>信息名称</th>
+					<th>信息描述</th>
+					<th>上报人</th>
+					<th>上报时间</th>
+					<th>备注</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.Description}}</td>
+					<td ng-if="selectTab.Id===1">{{x.CreatorNickName}}</td>
+					<td ng-if="selectTab.Id===2">{{x.UploadMemberNickName}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>{{x.Note}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">查看处理流程</button>
+						<!--<button type="button" ng-click="handleItem(x)" class="btn btn-default">操作</button>-->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增组织</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog seeOne-->
+<script type="text/ng-template" id="seeOne">
+	<div class="modal-header">
+		<div aria-label="Dismiss" class="ngdialog-close"></div>
+		<h5 class="modal-title">查看处理流程</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise" style="min-height: 100px;">
+
+		<div class="accordion">
+			<div class="accordion-group">
+				<div class="accordion-heading" ng-if="Steps.Workflower.State===3">
+					<div class="accordion-toggle">
+						<h5>该事件已经完成！</h5>
+					</div>
+				</div>
+				<div class="accordion-body" ng-if="Steps.Workflower.State!==3">
+					<div class="accordion-inner">
+						<ul class="list-group">
+							<li class="list-group-item"><strong>当前节点：</strong>{{Steps.CurrentNoder.Name}}</li>
+							<li class="list-group-item"><strong>节点状态：</strong>{{PcService.numberToText(Steps.CurrentNoder.State,WorkflowNoderStates)}}</li>
+						</ul>
+					</div>
+				</div>
+			</div>
+			<div class="form-horizontal" style="border-top: solid 1px #e5e5e5;padding-top: 15px;">
+				<div class="form-group">
+					<div class="col-lg-12 col-lg-offset-0">
+						<button class="btn btn-default" type="button" ng-click="closeThisDialog(0)">关 闭</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog seeOne-->
+
+<!--begin ngDialog detailOne-->
+<script type="text/ng-template" id="detailOne">
+	<div class="modal-header">
+		<h5 class="modal-title">查看表单</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog detailOne-->

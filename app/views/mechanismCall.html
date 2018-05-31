@@ -1,0 +1,58 @@
+<h3>{{$state.current.title}}</h3>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>名称</th>
+					<th>电话</th>
+					<th>描述</th>
+					<th class="text-center">操作</th>
+				</tr>
+
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.Telephone}}</td>
+					<td>
+						<div max-width="500">{{x.Describe}}</div>
+					</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改</button>
+					</td>
+				</tr>
+
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">修改{{$state.current.title}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

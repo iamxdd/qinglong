@@ -1,0 +1,125 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<form role="form" class="form-inline" ng-submit="fetchData()">
+			<div class="row">
+				<div class="col-lg-8">
+					<div class="form-group multiline" ng-repeat="x in screenfields">
+						<label for="input-{{x.name}}">{{x.nameDisplay}}：</label>
+						<input ng-if="x.editor==='normal'" id="input-{{x.name}}" ng-model="x.value" type="text" placeholder="请输入关键字" class="form-control" />
+						<select ng-if="x.editor==='select'" ng-change="fetchData()" id="input-{{x.name}}" ng-model="x.value" class="form-control" ng-options="e.Id as e.Name for e in x.opts"></select>
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">查询</button>
+					</div>
+				</div>
+				<div class="col-lg-4 text-right">
+					<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group _mycheckbox-inline">
+						<label>人群类型：</label>
+						<!--<label class="checkbox-inline" ng-repeat="x in Crowd">
+							<input name="name_Crowd" ng-model="searchOption.type" ng-change="fetchData()" value="{{x.value}}" type="radio" /> {{x.nameDisplay}}						
+						</label>-->
+
+						<div class="checkbox checkbox-inline c-checkbox" ng-repeat="x in Crowd">
+							<label>
+                        		<input ng-change="fetchData()" type="checkbox" ng-model="x.Checked">
+                        		<span class="fa fa-check"></span> {{x.nameDisplay}}
+                     		</label>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>身份证号码</th>
+					<th>年龄</th>
+					<th>民族</th>
+					<th>联系电话</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.ResidentName}}</td>
+					<td>{{PcService.numberToText(x.ResidentSex,Sexes)}}</td>
+					<td>{{x.ResidentIDCardNo}}</td>
+					<td>{{x.Age}}</td>
+					<td>{{PcService.numberToText(x.ResidentNationality,_Nations)}}</td>
+					<td>{{x.ResidentPhone}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">查 看</button>
+						<!--<button type="button" ng-click="toggleItem(x)" class="btn btn-success">审 核</button>-->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}{{$state.current.title.substring(0,4)}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="form-group _mycheckbox-inline" ng-repeat="field in fieldsList" ng-if=" (!creating && !field.Hide)||creating" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}">{{field.nameDisplay}}</label>
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+					<select ng-if="field.editor==='select' && creating" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" ng-change="fieldChange(field)" ng-options="x.Id as x.Name for x in field.opts">
+					</select>
+					<!--<input ng-if="field.editor==='normal'" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" />-->
+					<div ng-if="!creating" class="form-control form-inline" ng-bind="field.value"></div>
+
+					<div ng-if="field.editor==='multiselect' && creating" class="form-inline one-columu">
+						<div class="checkbox checkbox-inline c-checkbox" ng-repeat="x in field.opts">
+							<label>
+								<input type="checkbox" ng-model="x.Checked">
+								<span class="fa fa-check"></span> {{x.Name}}
+							</label>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-offset-3 col-lg-9">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" ng-click="closeDialog(0)" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->

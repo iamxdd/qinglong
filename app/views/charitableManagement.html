@@ -1,0 +1,519 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="devInit(selectTab.Id)">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.name" placeholder="请输入关键词" class="form-control" />
+
+					</div>
+					<div class="form-group" ng-if="selectTab.Id===1 ||selectTab.Id===2">
+						<label for="input-status">状态：</label>
+						<select id="input-status" ng-model='searchOption.state' class="form-control" ng-options='a.index as a.value for a in statusSlect' ng-change="devInit(selectTab.Id)">
+						</select>
+					</div>
+					<div class="form-group">
+						<input class="datepicker form-control" ng-model="searchOption.time" type="text" id="datetime" placeholder="请选择日期" />
+					</div>
+
+					<button type="submit" class="btn btn-default">查询</button>
+					<div class="form-group fundation-div">
+						<span ng-if="selectTab.Id===1">当前收到基金总金额:</span>
+						<span ng-if="selectTab.Id===2">当前已使用总基金:</span>
+						<span ng-if="selectTab.Id===3">当前可用余存基金:</span>
+						<span class="fundation-money">{{charmoney}}</span>元
+					</div>
+
+				</form>
+			</div>
+			<div class="col-lg-4 text-right" ng-if="selectTab.Id===1">
+				<button type="button" class="btn btn-success" ng-click="creatOne()">新增慈善{{addText(selectTab.Id)}}</button>
+			</div>
+			<div class="col-lg-4 text-right" ng-if="selectTab.Id===2">
+				<button type="button" class="btn btn-success" ng-click="creatMylist()">新增慈善{{addText(selectTab.Id)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover" style="width: 1500px;">
+			<thead>
+				<tr ng-if="selectTab.Id===1">
+					<th>序号</th>
+					<th>名称</th>
+					<th>金额(元)</th>
+					<th>类型</th>
+					<th>状态</th>
+					<th>方式</th>
+					<th>付款方</th>
+					<th>付款联系人</th>
+					<th>联系电话</th>
+					<th>时间</th>
+					<th>备注信息</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===2">
+					<th>序号</th>
+					<th>名称</th>
+					<th>金额(元)</th>
+					<th>状态</th>
+					<!-- <th>方式</th> -->
+					<th>收款方</th>
+					<th>收款联系人</th>
+					<th>联系电话</th>
+					<th>时间</th>
+					<!-- <th>备注信息</th> -->
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===3">
+					<th>序号</th>
+					<th>名称</th>
+					<th>金额(元)</th>
+					<th>已出</th>
+					<th>余款</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===1 ">
+					<td>{{$index+1}}</td>
+					<td title="{{x.Name}}">{{PcService.subStrDescribe(x.Name)}}</td>
+					<td style='text-align: right;'>{{x.Quantity}}</td>
+					<td>{{x.Category}}</td>
+					<td>{{x.State}}</td>
+					<td>{{x.PayWay}}</td>
+					<td title="{{x.Payer}}">{{PcService.subStrDescribe(x.Payer)}}</td>
+					<td title="{{x.Contacts}}">{{PcService.subStrDescribe(x.Contacts)}}</td>
+					<td>{{x.Phone}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td title="{{x.Remarks}}">{{PcService.subStrDescribe(x.Remarks)}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="creatTwo(x)" class="btn btn-success">修 改</button>
+						<button type="button" ng-click="deletelItem(x)" class="btn btn-danger">删 除</button>
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===2 ">
+					<td ng-if="!x.heading">{{$index+1}}</td>
+					<td ng-if="!x.heading" title="{{x.Name}}"> {{PcService.subStrDescribe(x.Name)}}</td>
+					<td ng-if="!x.heading" style='text-align: right;'>{{x.Quantity}}</td>
+					<td ng-if="!x.heading">{{x.State}}</td>
+					<!-- <td>{{x.PayWay}}</td> -->
+					<td ng-if="!x.heading" title="{{x.Receiver}}">{{PcService.subStrDescribe(x.Receiver)}}</td>
+					<td ng-if="!x.heading" title="{{x.Contacts}}">{{PcService.subStrDescribe(x.Contacts)}}</td>
+					<td ng-if="!x.heading">{{x.Phone}}</td>
+					<td ng-if="!x.heading">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<!-- <td ng-if="!x.heading" title="{{x.Remarks}}">{{PcService.subStrDescribe(x.Remarks)}}</td> -->
+					<td class="text-center" ng-if="!x.heading">
+						<button type="button" ng-click="seeItem(x,$index)" class="btn btn-success">查看明细</button>
+						<button type="button" class="btn btn-success" ng-click="creatAddDetail(x)">添加</button>
+					</td>
+					<td ng-if="x.heading" colspan="20" class="includeTr">
+						<div class="table-responsive includeDiv">
+							<table class="table table-hover includeTable">
+								<tr>
+									<th>序号</th>
+									<th>名称</th>
+									<th>方式</th>
+									<th>金额(元)</th>
+									<th>时间</th>
+									<th>备注信息</th>
+									<th class="text-center">操作</th>
+								</tr>
+								<tr ng-if="!x.list||x.list.length===0">
+									<td colspan="20">暂无任何数据！</td>
+								</tr>
+								<tr ng-repeat="y in x.list">
+									<td>{{$index+1}}</td>
+									<td title="{{y.CharityName}}">{{PcService.subStrDescribe(y.CharityName)}}</td>
+									<td title="{{y.PayWay}}">{{PcService.subStrDescribe(y.PayWay)}}</td>
+									<td style="text-align: right;">{{y.Quantity}}</td>
+									<td>{{y.CreatedAt | date:"yyyy-MM-dd HH:mm"}}</td>
+									<td title={{y.Remarks}}>{{PcService.subStrDescribe(y.Remarks)}}</td>
+									<td class="text-center" ng-if="selectTab.Id===2">
+										<button type="button" class="btn btn-danger" ng-click="deletelItem(y)">删 除</button>
+									</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===3">
+					<td ng-if="!x.heading">{{$index+1}}</td>
+					<td ng-if="!x.heading" title="{{x.Name}}">{{PcService.subStrDescribe(x.Name)}}</td>
+					<td ng-if="!x.heading" style="text-align: right;">{{x.Quantity}}</td>
+					<td ng-if="!x.heading" style="text-align: right;">{{x.UseQuantity}}</td>
+					<td ng-if="!x.heading" style="text-align: right;">{{x.BalanceQuantity}}</td>
+					<td ng-if="!x.heading">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center" ng-if="!x.heading">
+						<button type="button" ng-click="seeItem(x,$index)" class="btn btn-success">查看明细</button>
+
+					</td>
+					<td ng-if="x.heading" colspan="20" class="includeTr">
+						<div class="table-responsive includeDiv">
+							<table class="table table-hover includeTable">
+								<tr>
+									<th>序号</th>
+									<th>名称</th>
+									<th>金额(元)</th>
+									<th>时间</th>
+									<th>备注信息</th>
+								</tr>
+								<tr ng-if="!x.list||x.list.length===0">
+									<td colspan="20">暂无任何数据！</td>
+								</tr>
+								<tr ng-repeat="y in x.list">
+									<td>{{$index+1}}</td>
+									<td ng-if="selectTab.Id===3" title="{{y.Name}}">{{PcService.subStrDescribe(y.Name)}}</td>
+									<td style="text-align: right;">{{y.Quantity}}</td>
+									<td ng-if="selectTab.Id===3">{{y.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+									<td title={{y.Remarks}}>{{PcService.subStrDescribe(y.Remarks)}}</td>
+								</tr>
+							</table>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<!-- 新增慈善基金录入 -->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增慈善{{TitleText}}</h5>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="form-group" ng-repeat="field in fieldsList" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line' && !field.add">{{field.nameDisplay}}</label>
+				<label class="control-label col-lg-2" ng-if="field.add">{{field.nameDisplay}}</label>
+				<div class="col-lg-10" ng-if="field.add">
+					<input ng-if="field.editor==='normal' && !field.unit" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength=100/>
+
+					<span ng-if="field.unit==='money' && !field.des" class="unitMoney">元</span>
+					<select ng-if="field.editor==='select'" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" ng-options="x.Id as x.Name for x in field.opts">
+					</select>
+
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline" ng-repeat="x in field.opts">
+								<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}">
+								 {{x.Name}}
+							</label>
+					</div>
+					<div class="form-group col-lg-8" ng-if="field.editor==='textarea'">
+						<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+					</div>
+				</div>
+				<!---->
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}" ng-if="!field.add">
+					<input ng-if="field.editor==='normal' && !field.unit" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength=100 />
+					<input ng-if="field.editor==='normal' && field.unit" ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" maxlength=100/>
+					<span ng-if="field.unit==='money' && !field.des" class="unitMoney">元</span>
+
+					<select ng-if="field.editor==='select'" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" ng-options="x.Id as x.Name for x in field.opts">
+					</select>
+
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline" ng-repeat="x in field.opts">
+								<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}">
+								 {{x.Name}}
+							</label>
+					</div>
+					<div class="form-group" col-lg-8 ng-if="field.editor==='textarea'">
+						<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeThisDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+<!-- 修改慈善 -->
+<!--begin ngDialog createTwo-->
+<script type="text/ng-template" id="createTwo">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleModify}}修改</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsModifyList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="column"></div>
+	</div>
+</script>
+<!--end ngDialog createTwo-->
+
+<!--begin ngDialog workList-->
+<script type="text/ng-template" id="detailList">
+	<div class="modal-header">
+		<h5 class="modal-title" style="display: inline-block;">{{detailListText}}明细</h5>
+		<button ng-if="selectTab.Id===2" type="button" class="btn btn-success" style="position: relative;top:0;left: 500px" ng-click="creatAddDetail()">添加</button>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="table-responsive my-responsive">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>名称</th>
+						<th>方式</th>
+						<th>金额(元)</th>
+						<th>时间</th>
+						<th>备注信息</th>
+						<th class="text-center" ng-if="selectTab.Id===2">操作</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-if="detail_list.length==0||!detail_list">
+						<td colspan="20">暂无任何数据！</td>
+					</tr>
+					<tr ng-repeat="x in detail_list">
+						<td>{{$index+1}}</td>
+						<td ng-if="selectTab.Id===2" title="{{x.CharityName}}">{{PcService.subStrDescribe(x.CharityName)}}</td>
+						<td ng-if="selectTab.Id===3" title="{{x.Name}}">{{PcService.subStrDescribe(x.Name)}}</td>
+						<td ng-if="selectTab.Id===2" title="{{x.PayWay}}">{{PcService.subStrDescribe(x.PayWay)}}</td>
+						<td style="text-align: right;">{{x.Quantity}}</td>
+						<td ng-if="selectTab.Id===2">{{Chartime}}</td>
+						<td ng-if="selectTab.Id===3">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+						<td title={{x.Remark}}>{{PcService.subStrDescribe(x.Remark)}}</td>
+						<td class="text-center" ng-if="selectTab.Id===2">
+							<!-- <button type="button" class="btn btn-success" ng-click="creatAddDetail(x,1)">添加</button> -->
+							<!-- <button type="button" class="btn btn-danger" ng-click="creatAddDetail(x,2)">修 改</button> -->
+							<button type="button" class="btn btn-danger" ng-click="deletelItem(x)">删 除</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+
+	</div>
+</script>
+<!--end ngDialog workList-->
+
+<!--begin ngDialog workList-->
+<script type="text/ng-template" id="editList">
+	<div class="modal-header">
+		<h5 class="modal-title">{{editListText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="form-group" ng-repeat="field in fieldsListThree" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="col-lg-2 control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line'">{{field.nameDisplay}}</label>
+				<div class="col-lg-10" ng-if="field.add">
+					<input ng-if="field.editor==='normal' && field.unit" ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" ng-blur="inputBlur($index,field)" />
+					<span ng-if="field.unit==='money' && field.des" title="{{field.des}}" class="unitMoney">元 {{field.des}}</span>
+
+					<select ng-if="field.editor==='search-select'" chosen="" ng-disabled="field.editable" chosen="" id="searchSelect" ng-model="field.value" ng-required="field.required" class="form-control chosen-select" ng-options="x.Id as x.Name for x in field.opts" ng-change="usecharMoney(field.value,field.opts)"></select>
+				</div>
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}" ng-if="!field.add">
+					<input ng-if="field.editor==='normal' && field.unit" ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" ng-blur="inputBlur($index,field)" />
+					<span ng-if="field.unit==='money' && field.des" title="{{field.des}}" class="unitMoney">元 {{field.des}}</span>
+					<select ng-if="field.editor==='search-select'" chosen="" ng-disabled="field.editable" chosen="" id="searchSelect" ng-model="field.value" ng-required="field.required" class="form-control chosen-select" ng-options="x.Id as x.Name for x in field.opts" ng-change="usecharMoney(field.value,field.opts)"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeThisDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+
+</script>
+<!--end ngDialog workList-->
+
+<!--begin ngDialog workList-->
+<script type="text/ng-template" id="myeditList">
+	<div class="modal-header">
+		<h5 class="modal-title">新增慈善使用</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div>
+				<div class="form-group" ng-repeat="field in fieldsLists[0]" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+					<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line' && !field.add">{{field.nameDisplay}}</label>
+					<label class="control-label col-lg-2" ng-if="field.add">{{field.nameDisplay}}</label>
+					<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}" ng-if="!field.add">
+						<input ng-if="field.editor==='normal' && !field.unit" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength=100/>
+						<input ng-if="field.editor==='normal' && field.unit" ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" />
+						<span ng-if="field.unit==='money' && !field.des" class="unitMoney">元</span>
+						<div class="form-inline" ng-if="field.editor==='radio'">
+							<label class="checkbox-inline" ng-repeat="x in field.opts">
+									<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}">
+									 {{x.Name}}
+								</label>
+						</div>
+						<div ng-if="field.editor==='line'" class='linebox'>
+							<div></div>
+							<div>{{field.value}}</div>
+							<div></div>
+						</div>
+					</div>
+					<!---->
+
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<div style="position: relative;" ng-repeat="fields in fieldsLists[1] track by $index" ng-init="fields.$index=$index">
+				<div style="position: absolute;right: 10px;top: 0px" ng-if="$index===0">
+					<button class="btn btn-default" type="button" ng-click="addItem(fieldsLists[1].length)">+</button>
+				</div>
+				<div style="position: absolute;right: 10px;top: 0px" ng-if="$index!==0">
+					<button class="btn btn-default" type="button" ng-click="deleteItem($index)">-</button>
+				</div>
+
+				<div class="form-group" ng-repeat="field in fields" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+					<label class="control-label col-lg-4">{{field.nameDisplay}}</label>
+					<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+						<select ng-if="field.editor==='search-select'" chosen="" ng-change="myChange(field,field.opts,field.value)" class="form-control" ng-model="field.value" ng-options="x.Id as x.Name for x in field.opts"></select>
+						<input ng-if="field.editor==='normal' " ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" ng-blur="inputBlur($index,field)" />
+						<span ng-if="field.unit==='money' && field.des" title="{{field.des}}" class="unitMoney">元 {{field.des}}</span>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="form-group" ng-repeat="field in fieldsLists[2]" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line' && !field.add">{{field.nameDisplay}}</label>
+				<label class="control-label col-lg-2" ng-if="field.add">{{field.nameDisplay}}</label>
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline" ng-repeat="x in field.opts">
+								<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}">
+								 {{x.Name}}
+							</label>
+
+					</div>
+				</div>
+				<div class="form-group col-lg-4" ng-if="field.editor==='textarea'">
+					<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeThisDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>
+
+<!--begin ngDialog workList-->
+<script type="text/ng-template" id="createAdd">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}明细添加</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" ng-submit="formSubmit()">
+			<div>
+				<div class="form-group" ng-repeat="field in fieldsListEdit[0]" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+					<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line' && !field.add">{{field.nameDisplay}}</label>
+					<label class="control-label col-lg-2" ng-if="field.add">{{field.nameDisplay}}</label>
+					<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}" ng-if="!field.add">
+						<input ng-if="field.editor==='normal' && !field.unit" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength=100/>
+						<input ng-if="field.editor==='normal' && field.unit" ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" />
+						<span ng-if="field.unit==='money' && !field.des" class="unitMoney">元</span>
+						<div class="form-inline" ng-if="field.editor==='radio'">
+							<label class="checkbox-inline" ng-repeat="x in field.opts">
+									<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}" disabled>
+									 {{x.Name}}
+								</label>
+						</div>
+						<div ng-if="field.editor==='line'" class='linebox'>
+							<div></div>
+							<div>{{field.value}}</div>
+							<div></div>
+						</div>
+					</div>
+					<!---->
+
+				</div>
+				<div class="clearfix"></div>
+			</div>
+
+			<div style="position: relative;" ng-repeat="fields in fieldsListEdit[1] track by $index" ng-init="fields.$index=$index">
+				<div style="position: absolute;right: 10px;top: 0px" ng-if="$index===0">
+					<button class="btn btn-default" type="button" ng-click="addItem(fieldsListEdit[1].length)">+</button>
+				</div>
+				<div style="position: absolute;right: 10px;top: 8px" ng-if="$index!==0">
+					<button class="btn btn-default" type="button" ng-click="deleteItem($index)">-</button>
+				</div>
+
+				<div class="form-group" ng-repeat="field in fields" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+					<label class="control-label col-lg-4">{{field.nameDisplay}}</label>
+					<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+						<select ng-if="field.editor==='search-select'" chosen="" ng-change="myChange(field,field.opts,field.value)" class="form-control" ng-model="field.value" ng-options="x.Id as x.Name for x in field.opts"></select>
+						<input ng-if="field.editor==='normal' " ng-disabled="field.editable" class="form-control inputMoney inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" ng-blur="inputBlur($index,field)" />
+						<span ng-if="field.unit==='money' && field.des" title="{{field.des}}" class="unitMoney">元 {{field.des}}</span>
+					</div>
+				</div>
+				<div class="clearfix"></div>
+			</div>
+			<div class="form-group" ng-repeat="field in fieldsListEdit[2]" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line' && !field.add">{{field.nameDisplay}}</label>
+				<label class="control-label col-lg-2" ng-if="field.add">{{field.nameDisplay}}</label>
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline" ng-repeat="x in field.opts">
+								<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}">
+								 {{x.Name}}
+							</label>
+
+					</div>
+				</div>
+				<div class="form-group col-lg-4" ng-if="field.editor==='textarea'">
+					<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeThisDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>

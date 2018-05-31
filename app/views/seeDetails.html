@@ -1,0 +1,616 @@
+<h3>{{$state.current.title}}</h3>
+<ul class="nav nav-tabs nav-ul " id="tabTop">
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default quanzi-title" cg-busy="listBusyPromise">
+	<!--圈子首页开始tab-->
+	<ul ng-if="selectTab.Id===0">
+		<li class="quanzi-li-logo">
+			<div class="quanzi-main ">
+				<span class="text-bold">名称：</span>{{Neighborhood.Name}} (<span class="text-bold">ID:</span>{{Neighborhood.IDCode}})
+				<p class="text-bold head-peple">负责人:
+					<div ng-if="OwnerMemberAccount && OwnerMemberAccount.length!=0">
+						<div class="head-portrait">
+							<img ng-src="{{memberimgUrl}}" />
+						</div>
+						<span class="des-span des-span-new" title="{{memberResidentName}}">{{memberResidentName}}</span>
+						<span class="quanzi-header-ID quanzi-header-ID-new">ID:</span>&nbsp;&nbsp;{{memberName}}
+					</div>
+				</p>
+
+			</div>
+			<div id="detail-logo">
+				<div class="quanzi-logo" ng-if="Neighborhood.IconUrl !=''">
+					<img ng-src="{{Neighborhood.IconUrl}}" alt="" />
+				</div>
+				<button class="btn btn-success"  ng-if="OpenStatebtn===2" ng-click="toggleOpen()">开启</button>
+				<button class="btn btn-danger"  ng-if="OpenStatebtn===1" ng-click="toggleOpen()">关闭</button>
+				<button class="btn btn-primary"  ng-if="OpenStatebtn===3" disabled="disabled">已解散</button>
+				
+				
+			</div>
+		</li>
+		<div class="list-inline list-line-add"></div>
+		<li>
+			<div class="quanzi-main quanzi-manager-logo">
+				<span class="text-bold quanzi-manager">管理员:</span>
+				<ul>
+					<li class="quanzi-manager-img" ng-if="ManagerMemberAccount.length!=0" ng-repeat="x in ManagerMemberAccount">
+						<div class="head-portrait head-portraitpadding">
+							<img ng-src="{{x.imgUrl}}" />
+							
+							<i class="fa fa-times fa-times-new" aria-hidden="true" ng-click="deleteManager(x)"></i>
+						</div>
+						<span class="des-span des-span-new" title="{{x.ResidentName}}">{{x.ResidentName}}</span>
+						<span class="quanzi-header-ID quanzi-header-ID-new">ID:</span>&nbsp;&nbsp;{{x.Name}}
+					</li>
+
+				</ul>
+			</div>
+			<!--成员组-->
+			<div class="quanzi-main quanzi-manager-logo">
+				<span class="text-bold quanzi-manager">成员组:</span>
+				<ul>
+					<li class="quanzi-manager-img" ngif="GeneralMemberAccount.length !=0" ng-repeat="x in GeneralMemberAccount">
+						<div class="head-portrait head-portraitpadding">
+							<img ng-src="{{x.imgUrl}}" />
+						</div>
+						<span class="des-span des-span-new" title="{{x.ResidentName}}">{{x.ResidentName}}</span>
+						<span class="quanzi-header-ID quanzi-header-ID-new">ID:</span>&nbsp;&nbsp;{{x.Name}}
+					</li>
+
+				</ul>
+			</div>
+		</li>
+		<div class="list-inline list-line-add"></div>
+		<!--标签-->
+		<li class="quanzi-manager-logo">
+			<div class="quanzi-main">
+				<span class="text-bold quanzi-manager">标签:</span>
+				<span class="label-span tag-laed" ng-if="tagsList !=0 " ng-repeat="x in tagsList track by $index">{{x}}</span>
+
+			</div>
+			<div id="intro">
+				<span class="text-bold quanzi-manager quanzi-description-title ">介绍:</span>
+				<p class="quanzi-p-description " style="min-height: 100px;" ng-if="Presentation!=''">{{Neighborhood.Presentation}}</p>
+				<p class="quanzi-p-description none-data" ng-if="!Presentation ||Presentation===''">暂无数据</p>
+			</div>
+		</li>
+
+	</ul>
+	<!--圈子首页结束-->
+	<!--动态tab-->
+	<div class="table-responsive details-table" ng-if="selectTab.Id===1">
+		<!--圈子动态列表开始-->
+		<div class="details-state-start" ng-show="showOne==1">
+			<div ng-if="!Dynamiclist||Dynamiclist.length===0" class="Dynamiclist-div">暂无任何数据</div>
+			<div class="details-state-title quanzi-dongstatus" ng-repeat="x in Dynamiclist">
+				<div ng-click="isShow(x)" class="table-hover-new">
+					<span class="details-state">
+						{{x.Title}}
+						</span>
+					<table class="table table-bordered">
+						<tbody>
+							<tr>
+								<td class=" col-lg-4" style="padding-left: 19px;">{{x.DynamicType}}</td>
+								<td class=" col-lg-4">{{x.ResidentName}}</td>
+								<td class=" col-lg-4">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+
+			<!--3-圈子动态有图片列表->
+					<!--<div class="detail-line">
+						<img class="details-state-img" />
+						<div class="details-state-title details-state-news">
+							<span class="details-state">
+								永远18歌舞团成立39周年庆祝联欢晚会筹办
+							</span>
+							<table class="table table-bordered">
+								<tbody>
+									<tr>
+										<td class="col-2 details-img-content">圈子资讯</td>
+										<td class="col-2 details-img-content-add">习大大22333</td>
+										<td class="col-lg-8">2017.10.21</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>-->
+			<!--3-圈子动态有图片列表结束->
+				<!--圈子动态列表结束-->
+			<!--分页开始-->
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+						</paging>
+					</div>
+				</div>
+			</div>
+			<!--分页结束-->
+		</div>
+
+		<!--圈子动态列表详情开始-->
+		<div class="details-state-title " ng-show="showOne==2 && tabTop">
+			<i class="fa fa-arrow-left back-i" ng-click="backBtn('one')" aria-hidden="true"></i>
+			<span class="details-state">
+				{{showDetailData.Title}}
+			</span>
+			<table class="table table-bordered">
+				<tbody>
+					<tr>
+						<td class="col-lg-2 details-content">{{showDetailData.DynamicType}} </td>
+						<td class="col-lg-2">{{showDetailData.ResidentName}}</td>
+						<td class="col-lg-2">{{showDetailData.CreatedAt|date:"yyyy-MM-dd HH:mm:ss"}}</td>
+						<td class="col-lg-2">{{showDetailData.IsDisplay}}</td>
+					</tr>
+				</tbody>
+			</table>
+			<p style="text-indent: 2em; min-height: 100px;">
+				{{showDetailData.Content}}
+			</p>
+
+			<!--圈子动态评论和留言tab-->
+			<ul class="nav nav-tabs nav-ul mesage-tabs">
+				<li ng-repeat="x in messageList" ng-class="{active:x.Active}">
+					<a ng-click="checkedMessage(x)">{{x.Name}}</a>
+				</li>
+			</ul>
+
+			<!--评论内容开始-->
+			<div class="panel panel-default" ng-if="messageSelectTab.Id===1">
+				<!--循环开始-->
+				<div class="table-responsive details-table message-content">
+					<ul>
+						<li class="message-li none-data" ng-if=" !DynamicCommentList || DynamicCommentList.length===0">暂无任何数据</li>
+						<li class="message-li" ng-repeat=" x in DynamicCommentList">
+
+							<div class="message-div">
+								<img ng-src="{{x.imgUrl}}" />
+							</div>
+							<div class="col-2 message-t">{{x.ResidentName}}</div>
+							<div class="col-2 message-t">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm:ss"}}</div>
+							<div class="col-2 message-t">{{x.IsDisplay}}</div>
+							<p>{{x.Content}}</p>
+
+						</li>
+					</ul>
+				</div>
+				<!--分页开始-->
+				<div class="panel-footer" style="margin-bottom: -22px;">
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+							</paging>
+						</div>
+					</div>
+				</div>
+				<!--分页结束-->
+				<!--结束-->
+			</div>
+			<!--评论结束-->
+			<!--留言内容开始-->
+			<div class="panel panel-default" ng-if="messageSelectTab.Id===2">
+				<!--循环-->
+				<div class="table-responsive details-table message-content">
+					<ul>
+						<li class="message-li none-data" ng-if="!DynamicMessageList || DynamicMessageList.length===0">暂无任何数据</li>
+						<li class="message-li" ng-repeat=" x in DynamicMessageList">
+
+							<div class="message-div">
+								<img ng-src="{{x.MessageByImgUrl}}" />
+							</div>
+							<div class="col-2 message-t">{{x.MessageBy}}</div>
+							<div class="col-2 message-t">{{x.MessageAt | date:"yyyy-MM-dd HH:mm:ss"}}</div>
+							<div class="col-2 message-t">{{x.IsDisplay}}</div>
+							<p>{{x.Content}}</p>
+
+						</li>
+					</ul>
+				</div>
+				<!--结束-->
+				<!--分页开始-->
+				<div class="panel-footer" style="margin-bottom: -22px;">
+					<div class="row">
+						<div class="col-lg-12 text-center">
+							<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+							</paging>
+						</div>
+					</div>
+				</div>
+				<!--分页结束-->
+			</div>
+			<!--留言内容结束-->
+
+		</div>
+	</div>
+	<!--圈子动态详情结束-->
+	<!--动态tab结束-->
+	<!--圈子活动tab开始-->
+	<div class="table-responsive details-table" ng-if="selectTab.Id===2">
+		<!--圈子活动列表开始-->
+		<div class="details-state-start" ng-show="showActivityStatus===1">
+			<div class="details-state-title ">
+				<div class="table-responsive quanzi-active">
+					<table class="table table-bordered table-hover">
+						<tbody class="phylogeny-table">
+							<tr ng-if="Activitylist.length==0" >
+								<td colspan="20" class="Dynamiclist-div">暂无任何数据！</td>
+							</tr>
+							<tr ng-repeat="x in Activitylist">
+								<td ng-click="showActivity(x)">{{x.Title}}</td>
+								<td ng-click="showActivity(x)">圈子活动</td>
+								<td ng-click="showActivity(x)">{{x.ResidentName}}</td>
+								<td ng-click="showActivity(x)">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!--分页开始-->
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+						</paging>
+					</div>
+				</div>
+			</div>
+			<!--分页结束-->
+		</div>
+		<!--圈子活动列表详情开始-->
+		<div class="details-state-title details-active-ul awre-size" ng-show="showActivityStatus===2">
+			<ul>
+				<li ng-if="showActivityData ===''">暂无任何数据</li>
+				<li>
+					<i class="fa fa-arrow-left back-i-two" ng-click="backBtn('two')" aria-hidden="true"></i>
+					<span class="details-active">
+						{{showActivityData.Title}}
+					</span>
+					<p class="details-active">
+						<span>圈子活动</span>
+						<span>{{showActivityData.ResidentName}}</span>
+						<span>{{showActivityData.CreatedAt|date:"yyyy-MM-dd HH:mm:ss"}}</span>
+					</p>
+					<p class="para-indetnew none-data">
+						{{showActivityData.Content}}
+					</p>
+
+				</li>
+				<p class="details-active-person">报名参加人员</p>
+				<div class="list-inline detail-line"></div>
+
+				<li>
+					<div class="quanzi-main details-active-person-div">
+						<ul>
+							<li ng-if="!Joinlist||Joinlist.length===0">暂无任何数据</li>
+							<li class="quanzi-manager-img canjia" ng-repeat="x in Joinlist">
+								<div class="head-portrait">
+									<img ng-src="{{x.MemberAccountimgUrl}}" />
+								</div>
+								<span class="des-span join-span" title="{{x.ResidentName}}">{{x.ResidentName}}</span>
+								<span class="quanzi-header-ID">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}
+							</li>
+							
+						</ul>
+					</div>
+				</li>
+			</ul>
+			
+		</div>
+		<!--分页开始-->
+		<div class="panel-footer" ng-show="showActivityStatus===2">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)"> </paging>
+				</div>
+			</div>
+		</div>
+		<!--分页结束-->
+	<!--圈子活动列表详情结束-->
+	</div>
+	<!--圈子活动tab结束-->
+	<!--相册tab开始-->
+	<div class="table-responsive details-table" ng-if="selectTab.Id===3"> 
+		<div class="details-state-title details-active-ul detail-photo detailPhoto">
+			<ul>
+				<li ng-if="!AlbumList||AlbumList.length===0" class="Dynamiclist-div">暂无任何数据</li>
+				<li class="detail-photo-theme" ng-repeat="x in AlbumList">
+					<div class="seePhoto" ng-click="seePhoto(x)">
+						<img class="etail-photo-img" ng-src="{{x.imgUrl}}" />
+					</div>
+					<div class="photo-theme-span">
+						<span class="photo-name">{{x.Name}}</span>
+						<span class="photo-mager">{{x.ResidentName}}</span>
+					</div>
+				</li>
+			</ul>
+			
+		</div>
+		<!--分页开始-->
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+					</paging>
+				</div>
+			</div>
+		</div>
+		<!--分页结束-->
+	</div>
+	<!--相册tab结束-->
+	<!--议事厅tab开始-->
+
+	<div class="table-responsive details-table" ng-if="selectTab.Id===4">
+		<!--议事厅列表开始-->
+		<div class="details-state-start" ng-show="showAffairStatus===1">
+			<div class="details-state-title ">
+				<div class="table-responsive quanzi-active">
+					<table class="table table-bordered table-hover">
+						<tbody class="phylogeny-table">
+							<tr ng-if="AffairList.length==0||!AffairList">
+								<td colspan="20" class="Dynamiclist-div">暂无任何数据！</td>
+							</tr>
+							<tr ng-repeat="x in AffairList">
+								<td class="col-6" ng-click="showAffair(x)">{{x.Title}}
+									<span class="discuss-logo-span"></span>
+									<p class="discuss-logo-p small">{{x.State}}</p>
+								</td>
+								<td class="col-2" ng-click="showAffair(x)">议事厅</td>
+								<td class="col-2" ng-click="showAffair(x)">{{x.ResidentName}}</td>
+								<td class="col-2" ng-click="showAffair(x)">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+			<!--分页开始-->
+			<div class="panel-footer">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+						</paging>
+					</div>
+				</div>
+			</div>
+			<!--分页结束-->
+		</div>
+		<!--议事厅列表结束-->
+		<!-- 议事详情开始-->
+		<div class="details-state-title details-active-ul" ng-show="showAffairStatus===2 && tabTopThree">
+			<ul>
+				<li ng-if="!showAffairData || showAffairData==''">暂无数据</li>
+				<li>
+					<i class="fa fa-arrow-left back-i-two" ng-click="backBtn('four')" aria-hidden="true"></i>
+					<span class="details-active">
+						{{showAffairData.Title}}
+					</span>
+					<div class="discuss-logo">
+						<span class="discuss-logo-span"></span>
+						<p class="discuss-logo-p small">{{showAffairData.State}}</p>
+					</div>
+					<span ng-show="showColor===1" class="discuss-btn">{{showAffairData.StateDesc}}</span>
+					<span ng-show="showColor===2" class="discuss-btn-red">{{showAffairData.StateDesc}}</span>
+					<p class="details-active">
+						<span>圈子议事厅</span>
+						<span>{{showAffairData.ResidentName}}</span>
+						<span>{{showAffairData.CreatedAt |date:"yyyy-MM-dd HH:mm" }}</span>
+					</p>
+					<p class="para-indetnew">
+						{{showAffairData.content}}
+					</p>
+
+				</li>
+			</ul>
+
+		</div>
+
+		<ul class="nav nav-tabs nav-ul mesage-tabs" ng-show="showAffairStatus===2">
+			<li ng-repeat="x in navTabListResult" ng-class="{active:x.Active}">
+				<a ng-click="discussChecked(x)">{{x.Name}}</a>
+			</li>
+		</ul>
+
+		<!--意识结果-->
+
+		<div class="panel panel-default" ng-show="showAffairStatus===2">
+
+			<div class="table-responsive details-table">
+				<div class="details-state-start" ng-if="discussSelectTab.Id===1">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!GetAffairList||GetAffairList.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in GetAffairList">
+						<img class="details-state-img" ng-src="{{x.CreateByimgUrl}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.ResidentName}}</td>
+										<td class="col-4">{{x.VotingType}}</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择同意-->
+				<div class="details-state-start" ng-if="discussSelectTab.Id===2">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!agreeList||agreeList.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in agreeList">
+						<img class="details-state-img" ng-src="{{x.CreateByimgUrl}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.ResidentName}}</td>
+										<td class="col-4">{{x.VotingType}}</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择方队-->
+				<div class="details-state-start" ng-if="discussSelectTab.Id===3">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!ObjectTo||ObjectTo.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in ObjectTo">
+						<img class="details-state-img" ng-src="{{x.CreateByimgUrl}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.ResidentName}}</td>
+										<td class="col-4">{{x.VotingType}}</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+				<!--选择弃权-->
+				<div class="details-state-start" ng-if="discussSelectTab.Id===4">
+					<!--1-->
+					<div class="detail-line discuss-detail-line none-data" ng-if="!waiver||waiver.length===0">暂无任何数据</div>
+					<div class="detail-line discuss-detail-line" ng-repeat=" x in waiver">
+						<img class="details-state-img" ng-src="{{x.CreateByimgUrl}}" />
+						<div class="details-state-title details-state-news discuss-table">
+
+							<table class="table table-bordered  table-hover ">
+								<tbody>
+									<tr>
+										<td class="col-4 details-img-content">{{x.ResidentName}}</td>
+										<td class="col-4">{{x.VotingType}}</td>
+										<td class="col-lg-4">{{x.CreatedAt |date:"yyyy-MM-dd HH:mm"}}</td>
+									</tr>
+
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<!--分页开始-->
+			<div class="panel-footer" style="margin-bottom: -22px;">
+				<div class="row">
+					<div class="col-lg-12 text-center">
+						<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+						</paging>
+					</div>
+				</div>
+			</div>
+			<!--分页结束-->
+		</div>
+	</div>
+
+	<!--议事厅tab结束-->
+	<!--发展史tab-->
+	<div class="table-responsive details-table" ng-if="selectTab.Id===5">
+		<!--发展史开始-->
+		<div class="details-state-start">
+			<div class="details-state-title ">
+				<div class="table-responsive">
+					<table class="table table-bordered table-hover">
+						<tbody class="phylogeny-table">
+							<tr ng-if="list.length==0||!list">
+								<td colspan="20">暂无任何数据！</td>
+							</tr>
+							<tr ng-repeat="x in list">
+								<td class="col-10">{{x.Content}}</td>
+								<td class="col-2">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+		<!--发展史结束-->
+		<div class="panel-footer">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+					</paging>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--发展史tab结束-->
+</div>
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+	<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div cg-busy="ngDialogPromise">
+	<div class="none-data" ng-if="imgList.length===0">暂无任何数据</div>
+	<!--相册开始 -->
+	<div class="pc-slide" ng-if="imgList && imgList.length!=0">
+		
+		<div class="view">
+			<div class="swiper-container">
+				<a class="arrow-left" href="#"></a>
+				<a class="arrow-right" href="#"></a>
+				<div class="swiper-wrapper">
+
+					<div class="swiper-slide slide-view" ng-repeat="x in imgList">
+						<a target="_blank"><img ng-src="{{x.imgUrl}}" alt="" style="width:400px;height:400px"></a>
+					</div>
+					
+					<!--模拟开始-->
+					<!--<div class="swiper-slide slide-view">
+						<a target="_blank"><img src="app/img/bg2.jpg" alt=""></a>
+					</div>
+					<div class="swiper-slide slide-view">
+						<a target="_blank"><img src="app/img/bg5.jpg" alt=""></a>
+					</div>
+					
+					
+					<!--结束 -->
+					
+				</div>
+			</div>
+		</div>
+		<div class="preview">
+			<a class="arrow-left" href="#"></a>
+			<a class="arrow-right" href="#"></a>
+			<div class="swiper-container swiper-container-new">
+				<div class="swiper-wrapper slide-direction">
+					<div class="swiper-slide active-nav" ng-repeat="x in imgList">
+						<img ng-src="{{x.imgUrl}}" alt="">
+					</div>
+					
+					
+					<!--<div class="swiper-slide slide-direction">
+						<img src="app/img/bg2.jpg" alt="">
+					</div>
+					<div class="swiper-slide slide-direction">
+						<img src="app/img/bg5.jpg" alt="">
+					</div>
+					<!--结束 -->
+				</div>
+			</div>
+		</div>
+	</div>
+	<!--相册结束-->
+	
+
+</div>
+</script>

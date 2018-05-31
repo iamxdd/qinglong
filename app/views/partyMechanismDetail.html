@@ -1,0 +1,16 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default partyMechanism" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<i class="fa fa-arrow-left back-i" id="back-all-btn" onclick="javascript:history.back(-1)" aria-hidden="true"></i>
+		<div class="text-right">
+			<button ng-if="PartyState==1 || PartyState==2 " type="button" ng-click="toggleItem(1)" class="btn" ng-class="isToggle()" ng-bind="PartyState===1?'关闭':'开启'"></button>
+			<div class="partyMechanismBtn" ng-if="PartyState===3">
+				<span>已解散</span>
+			</div>
+		</div>
+		<div id='jOrgChart' style="margin:0;overflow-x: auto;overflow-y: hidden;"></div>
+	</div>
+
+</div>
+<!-- END panel-->

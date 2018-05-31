@@ -1,0 +1,110 @@
+{
+  "dashboard": {
+    "WELCOME": "欢迎回到{{appName}}"
+  },
+  "topbar": {
+    "messages": {
+      "UNREAD": "未读消息",
+      "MORE": "更多消息"
+    },
+    "search": {
+      "PLACEHOLDER": "输入关键字查找.."
+    },
+    "notification": {
+      "MORE": "更多信息"
+    }
+  },
+  "offsidebar": {
+    "setting": {
+      "SETTINGS": "设置",
+      "THEMES": "主题",
+      "layout": {
+        "FIXED": "Fixed",
+        "COLLAPSED": "Collapsed"
+      }
+    },
+    "chat": {
+      "CONNECTIONS": "街区切换",
+      "SEARCH": "Search contacts",
+      "ONLINE": "在线",
+      "OFFLINE": "离线",
+      "LOAD_MORE": "加载更多",
+      "TASK_COMPLETION": "Tasks completion",
+      "QUOTA": "Upload Quota"
+    }
+  },
+  "sidebar": {
+    "WELCOME": "Welcome",
+    "heading": {
+      "HEADER": "Main Navigation",
+      "COMPONENTS": "Components",
+      "MORE": "More"
+    },
+    "nav": {
+      "DASHBOARD": "DashboardA",
+      "WIDGETS": "WidgetsA",
+      "WIDGETS": "WidgetsA",
+      "DOCUMENTATION": "DocumentationA",
+      "element": {
+        "ELEMENTS": "ElementsA",
+        "BUTTON": "ButtonA",
+        "COLOR": "ColorsA",
+        "NOTIFICATION": "NotificationA",
+        "INTERACTION": "InteractionA",
+        "SPINNER": "SpinnerA",
+        "ANIMATION": "AnimationA",
+        "DROPDOWN": "DropdownA",
+        "PANEL": "PanelA",
+        "PORTLET": "PortletA",
+        "GRID": "GridA",
+        "GRID_MASONRY": "Grid MasonryA",
+        "TYPO": "TypographyA",
+        "FONT_ICON": "Font IconsA",
+        "WEATHER_ICON": "Weather IconsA"
+      },
+      "form": {
+        "FORM": "FormsA",
+        "STANDARD": "StandardA",
+        "EXTENDED": "ExtendedA",
+        "VALIDATION": "ValidationA",
+        "WIZARD": "WizardA",
+        "UPLOAD": "UploadA"
+      },
+      "chart": {
+        "CHART": "ChartsA",
+        "FLOT": "FlotA",
+        "RADIAL": "RadialA"
+      },
+      "table": {
+        "TABLE": "Table",
+        "STANDARD": "StandardA",
+        "EXTENDED": "ExtendedA",
+        "DATATABLE": "DatatableA"
+      },
+      "map": {
+        "MAP": "Maps",
+        "GOOGLE": "Google MapA",
+        "VECTOR": "Vector MapA"
+      },
+      "extra": {
+        "EXTRA": "ExtrasA",
+        "MAILBOX": "MailboxA",
+        "TIMELINE": "TimelineA",
+        "CALENDAR": "CalendarA",
+        "INVOICE": "InvoiceA",
+        "SEARCH": "SearchA",
+        "TODO": "Todo ListA",
+        "PROFILE": "ProfileA"
+      },
+      "pages": {
+        "PAGES": "Pages",
+        "LOGIN": "Login",
+        "REGISTER": "Register",
+        "RECOVER": "Recover password",
+        "PROFILE": "Profile",
+        "LOCK": "Lock",
+        "STARTER": "Starter Template"
+      }
+    }
+  }
+}

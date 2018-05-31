@@ -1,0 +1,282 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<form role="form" class="form-inline" ng-submit="fetchData()">
+			<div class="row">
+				<div class="col-lg-10">
+					<!--<div class="form-group multiline">位置：
+						<select class="form-control" ng-options="x.Id as x.Name for x in location" ng-change="fetchData()" ng-model="searchOption.position">
+						</select>
+					</div>-->
+					<div class="form-group multiline">经营分类：
+						<select class="form-control" ng-options="x.Id as x.Name for x in ManagementClassification" ng-change="fetchData()" ng-model="searchOption.sellType">
+						</select>
+					</div>
+					<div class="form-group multiline">状态：
+						<select class="form-control" ng-options="x.Id as x.Name for x in State" ng-change="fetchData()" ng-model="searchOption.State">
+						</select>
+					</div>
+					<div class="form-group multiline webkit">
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder=" 请输入店铺名称或商家姓名或电话号码" class="form-control inputIn" />
+					</div>
+				</div>
+				<div class="col-lg-1 addlogin">
+					<button type="button" class="btn btn-success" ng-click="creatOne()">新增登记</button>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group multiline">开始时间：
+						<input class="datepicker form-control worklist" ng-model="searchOption.startTime" type="text" id="datetimeStart" placeholder='开始时间' />
+					</div>
+					<div class="form-group multiline">结束时间：
+						<input class="datepicker form-control worklist" ng-model="searchOption.endTime" type="text" id="datetimeEnd" placeholder='结束时间' />
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">搜 索</button>
+					</div>
+				</div>
+			</div>
+
+	</div>
+	</form>
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>店铺名称</th>
+					<th>经营分类</th>
+					<th>状态</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>身份证号</th>
+					<th>联系电话</th>
+					<th>营业执照码</th>
+					<th>店铺地址</th>
+					<th>操作人</th>
+					<th>备注</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index}}</td>
+					<td class="td-hiddens" title="{{x.Name}}">{{x.Name}}</td>
+					<td>{{x.SellType}}</td>
+					<td>{{x.StateName}}</td>
+					<td class="td-hiddens" title="{{x.Principal}}">{{x.Principal}}</td>
+					<td>{{x.Sex}}</td>
+					<td class="td-hiddens" title="{{x.IDCardNo}}">{{x.IDCardNo}}</td>
+					<td>{{x.Phone}}</td>
+					<td class="td-hiddens" title="{{x.BusinessLicense}}">{{x.BusinessLicense}}</td>
+					<td class="td-hiddens" title="{{x.Address}}">{{x.Address}}</td>
+					<td class="td-hiddens" title="{{x.CreateBy}}">{{x.CreateBy}}</td>
+					<td class="td-hiddens" title="{{x.Remarks}}">{{x.Remarks}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="resetItem(x)" class="btn  btn-default">重置密码</button>
+						<button ng-if="x.State!=3" ng-click="editorOne(x)" class="btn btn-default">修改</button>
+						<button ng-click="deleteItem(x)" class="btn btn-primary">删除</button>
+						<button ng-if="x.State!=3" type="button" ng-click="toggleItem(x)" class="btn" ng-class="isToggle(x)" ng-bind="toggleText(x)"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- START table-responsive-->
+<!-- END table-responsive-->
+
+</div>
+<!-- END panel-->
+<!--新增-->
+<script type="text/ng-template" id="creatOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增商家信息登记</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise" id="add">
+		<form class="form-horizontal">
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">身份证号码</label>
+				<div class=" col-lg-9">
+					<input type="text" ng-model="shop.IDCardNo" maxlength="18" id="chargePeple" ng-change="clearInput()" ng-keyup="getPersonInCharge(shop.IDCardNo,1)" ng-blur="getPersonInCharge(shop.IDCardNo)" class="form-control cleaAdd" placeholder="请输入完整的身份证号码" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">负责人</label>
+				<div class=" col-lg-9">
+					<input type="text" disabled="disabled" ng-model="shop.Name" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">性别</label>
+				<div class=" col-lg-9">
+					<label class="checkbox-inline" ng-repeat="x in Sex">
+						<input type="radio" disabled="disabled" ng-model="shop.Sex" value="{{x.Id}}" name="name_{{x.Name}}"> {{x.Name}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">联系电话</label>
+				<div class=" col-lg-9">
+					<input type="text" disabled="disabled" ng-model="shop.Phone" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">店铺地址</label>
+				<div class=" col-lg-3">
+					<input type="text" ng-model="shop.Address" class="form-control cleaAdd btn-address" disabled="disabled" />
+				</div>
+				<div class=" col-lg-6">
+					<input type="text" ng-model="shop.AddressTwo" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">店铺名称</label>
+				<div class=" col-lg-9">
+					<input type="text" ng-model="shop.shopName" class="form-control cleaAdd" />
+				</div>
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">社会信用代码</label>
+				<div class=" col-lg-9">
+					<input type="text" ng-model="shop.BusinessLicense" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">经营分类</label>
+				<div class=" col-lg-9">
+					<label class="checkbox-inline" ng-repeat="x in Classification">
+						<input type="radio" ng-model="shop.SellType" value="{{x.Id}}" name="name_{{x.Name}}"> {{x.Name}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">备注</label>
+				<div class=" col-lg-9">
+					<textarea class="form-control fundtext" ng-model="shop.Remarks"></textarea>
+				</div>
+			</div>
+			<div class="form-group col-lg-12" style="margin-bottom: 50px;">
+				<div class="form-group">
+					<label class="control-label col-lg-4">营业执照副本</label>
+					<div class=" col-lg-8">
+						<image-file-uploader uif-callback="configImageAfterUpload(url)" default-url="{{defaultImageSrc}}"></image-file-uploader>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="formSubmit()">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+<!--end ngDialog createOne-->
+<!--修改-->
+<script type="text/ng-template" id="createTwo">
+	<div class="modal-header">
+		<h5 class="modal-title">修改商家信息登记</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise" id="add">
+		<form class="form-horizontal">
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">身份证号码</label>
+				<div class=" col-lg-9">
+					<input type="text" ng-model="editorData.IDCardNo" id="chargePeple" maxlength="18" ng-change="clearInput()" ng-keyup="getPersonInCharge(editorData.IDCardNo,1)" ng-blur="getPersonInCharge(editorData.IDCardNo)" class="form-control cleaAdd" placeholder="请输入完整的身份证号码查询"
+					/>
+					<ul class="ulInput ulInputadd">
+						<li ng-repeat="x in ulInputData" ng-click='fillpersonInCharge(x)'>{{x.Name}}</li>
+					</ul>
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">负责人</label>
+				<div class=" col-lg-9">
+					<input type="text" disabled="disabled" ng-model="editorData.Principal" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">性别</label>
+				<div class=" col-lg-9">
+					<label class="checkbox-inline" ng-repeat="x in Sex">
+						<input type="radio" disabled="disabled" ng-model="editorData.Sex" value="{{x.Id}}" name="name_{{x.Name}}"> {{x.Name}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">联系电话</label>
+				<div class=" col-lg-9">
+					<input type="text" disabled="disabled" ng-model="editorData.Phone" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">店铺地址</label>
+				<div class=" col-lg-3">
+					<input type="text" required="required" disabled="disabled" ng-model="editorData.AddressOne" class="form-control cleaAdd btn-address" />
+				</div>
+				<div class=" col-lg-6">
+					<input type="text" ng-model="editorData.AddressTwo" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">店铺名称</label>
+				<div class=" col-lg-9">
+					<input type="text" required="required" ng-model="editorData.Name" class="form-control cleaAdd" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">社会信用代码</label>
+				<div class=" col-lg-9">
+					<input type="text" required="required" ng-model="editorData.BusinessLicense" class="form-control cleaAdd" />
+				</div>
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">经营分类</label>
+				<div class=" col-lg-9">
+					<label class="checkbox-inline" ng-repeat="x in Classification">
+						<input type="radio" ng-model="editorData.SellType" value="{{x.Id}}" name="name_{{x.Name}}"> {{x.Name}}
+					</label>
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">备注</label>
+				<div class=" col-lg-9">
+					<textarea class="form-control fundtext" ng-model="editorData.Remarks"></textarea>
+				</div>
+			</div>
+			<div class="form-group col-lg-12" style="margin-bottom: 50px;">
+				<div class="form-group">
+					<label class="control-label col-lg-4">营业执照副本</label>
+					<div class=" col-lg-8">
+						<image-file-uploader uif-callback="configImageAfterUpload(url)" default-url="{{editordefaultImageSrc}}"></image-file-uploader>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-success" ng-click="formSubmit()">确 定</button>
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</script>

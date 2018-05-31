@@ -1,0 +1,56 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<textarea style="width: 680px;" ui-kindeditor ng-model="myEditor"></textarea>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<div class="modal-header">
+			<h5 class="modal-title">新增地址綁定</h5>
+		</div>
+		<div class="modal-body" cg-busy="ngDialogPromise">
+			<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="1"></div>
+		</div>
+		<div class="modal-body">
+			<button ng-click="getValue()"> dianj</button>
+		</div>
+	</div>
+
+	<div class="table-responsive">
+		<button class="btn btn-default" ng-click="addUsing()">新增慈善使用</button>
+
+		<button class="btn btn-default" ng-click="kindEditor()">富文本编辑器</button>
+	</div>
+	<script type="text/ng-template" id="editList">
+		<div class="modal-header">
+			<h5 class="modal-title">慈善使用例子</h5>
+		</div>
+		<div class="modal-body" cg-busy="ngDialogPromise">
+			<div class="form-horizontal form-inline" style="width: 600px;margin: 0 auto;">
+				<div style="height: 30px;line-height: 30px; text-align: right;">
+					<button class="btn btn-default" ng-click="addItem(fieldsLists.length)">添加</button>
+				</div>
+				<div style="padding: 20px;" ng-repeat="fields in fieldsLists track by $index" ng-init="fields.$index=$index">
+					<div class="form-group" ng-repeat="field in fields">
+						<select ng-if="field.editor==='select'" ng-change="myChange()" class="form-control" ng-model="field.value" ng-options="x.Id as x.Name for x in field.opts"></select>
+						<span class="btn btn-default" ng-click="deleteItem(fields)" ng-if="fields.$index!==0">删除</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+
+	</script>
+	<!--end ngDialog workList-->
+	<!--end ngDialog kindEditor-->
+	<script type="text/ng-template" id="kindEditor">
+		<div class="modal-header">
+			<h5 class="modal-title">uiKindeditor</h5>
+		</div>
+		<div class="modal-body" cg-busy="ngDialogPromise">
+			<textarea style="width: 680px;" ui-kindeditor ng-model="myEditor"></textarea>
+		</div>
+
+	</script>
+	<!--end ngDialog kindEditor-->

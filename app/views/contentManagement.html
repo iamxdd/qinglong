@@ -1,0 +1,132 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-10">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword">类 型：</label>
+						<select class="form-control" ng-model="searchOption.type" ng-change="fetchData()">
+							<option value="0">全部</option>
+							<option ng-repeat="x in allCategory" value="{{x.Id}}">{{x.Name}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-keyword">状 态：</label>
+						<select class="form-control" ng-model="searchOption.state" ng-change="fetchData()" ng-options="x.Id as x.Name for x in types"></select>
+					</div>
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入标题" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-2 text-right">
+				<button type="button" class="btn btn-success" ng-click="creatOne()">新增办事</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>标题</th>
+					<th>类型</th>
+					<th>发布人</th>
+					<th>发布时间</th>
+					<th>审核人</th>
+					<th>审核时间</th>
+					<th>状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td>{{x.Title}}</td>
+					<td>{{x.WorkTypeName}}</td>
+					<td>{{x.PublishUserName}}</td>
+					<td>{{x.PublishAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>{{x.ReviewUserName}}</td>
+					<td>{{x.ReviewAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td>{{PcService.numberToText(x.State,types)}}</td>
+					<td class="text-center">
+						<button class="btn btn-default" ng-click="detailItem(x)">详 情</button>
+						<!--ng-if="isEdit(x)"-->
+						<button type="button" ng-click="editItem(x)" class="btn btn-primary">修 改</button>
+						<button ng-if="isCancel(x)" type="button" ng-click="cancelItem(x)" class="btn btn-primary">撤 销</button>
+						<button ng-if="isDelete(x)" type="button" ng-click="deleteItem(x)" class="btn  btn-danger">删 除</button>
+						<button type="button" ng-click="toplItem(x)" class="btn" ng-class="isTopToggle(x)" ng-bind="topText(x)"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog _createOne-->
+<script type="text/ng-template" id="_createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>-->
+		<form class="form-horizontal mycheckbox-inline " cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label class="control-label col-lg-4">标题</label>
+						<div class=" col-lg-8">
+							<input type="text" ng-required="true" ng-model="news.Title" class="form-control" required placeholder="请输入模板名称" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-lg-4">类别</label>
+						<div class=" col-lg-8">
+							<select class="form-control" ng-required="true" ng-model="news.WorkTypeId" ng-options="x.Id as x.Name for x in AllCatogrys"></select>
+						</div>
+					</div>
+
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label class="control-label col-lg-4">封面图</label>
+						<div class=" col-lg-8">
+							<image-file-uploader ng-required="true" uif-callback="configImageAfterUpload(url)" default-url="{{news.Images}}"></image-file-uploader>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">内容</label>
+				<div class=" col-lg-10">
+					<div text-angular="" ng-required="true" ng-model="news.Content" name="wysiswyg-editor" class="btn-group-small" ng-disabled="disabled"></div>
+					<!--<textarea class="form-control" ng-model="news.Content"></textarea>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-2">
+					<input type="submit" class="btn btn-success" value="确 定" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->

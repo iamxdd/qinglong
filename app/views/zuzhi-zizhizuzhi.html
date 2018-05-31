@@ -1,0 +1,135 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input ng-model="searchOption.name" id="input-keyword" type="text" placeholder="请输入组织名称" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,4)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>组织名称</th>
+					<th>上级组织</th>
+					<th>院落名称</th>
+					<th>联系电话</th>
+					<th>自治单元</th>
+					<th>排序号</th>
+					<th>创建时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length===0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.ParentName}}</td>
+					<td>{{x.CourtyardName}}</td>
+					<td>{{x.Telephone}}</td>
+					<td>{{x.GridName}}</td>
+					<td>{{x.Sort}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<!--<button type="button" ng-click="MembersManageItem(x)" class="btn btn-default">成员管理</button>-->
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修 改</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn" ng-class="PcService.toggleClass(x)" ng-bind="PcService.toggleText(x)"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}自治组织</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog createMember-->
+<script type="text/ng-template" id="createMember">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}组织成员</h5>
+	</div>
+	<div class="modal-body" cg-busy="getResidentPromise">
+		<form class="form-horizontal">
+			<div class="form-group">
+				<label class="control-label col-lg-3">搜索居民</label>
+				<div class="col-lg-9">
+					<input type="text" placeholder="请输入关键字查询居民身份信息" ng-blur="getResidentStatus()" ng-model="Resident.value" class="form-control" />
+				</div>
+			</div>
+		</form>
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createMember-->
+
+<!--begin ngDialog MemberManage-->
+<script type="text/ng-template" id="MemberManage">
+	<div class="modal-header">
+		<h5 class="modal-title">自治组织-成员管理
+		<div class="pull-right">
+			<button class="btn btn-default" ng-click="addMember(x)">新增组织成员</button>
+		</div>
+		</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>成员姓名</th>
+				<th>成员身份</th>
+				<th>管理区域</th>
+				<th class="text-center">操作</th>
+			</tr>
+			<tr ng-if="MemberList.length===0||!MemberList">
+				<td colspan="10">暂无成员！</td>
+			</tr>
+			<tr ng-repeat="x in MemberList">
+				<td>{{x.$index}}</td>
+				<td>{{x.Name}}</td>
+				<td>{{x.AutonomyRoleName}}</td>
+				<td>{{x.GridName}}</td>
+				<td class="text-center">
+					<!--<button ng-click="modifyMember(x)" class="btn btn-default">修改</button>-->
+					<button ng-click="deleteMember(x)" class="btn btn-default">删除</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</script>
+<!--end ngDialog MemberManage-->

@@ -1,0 +1,28 @@
+<h3><span ng-click="history.go(-1)">工作流</span>*配置步骤</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList[0]" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog adjustment-->
+<script type="text/ng-template" id="adjustment">
+	<div class="modal-header">
+		<h5 class="modal-title">调整积分</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList[1]" close-dialog="closeThisDialog(0)" form-submit="adustFormSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog adjustment-->

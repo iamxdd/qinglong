@@ -1,0 +1,33 @@
+<!-- top navbar-->
+<header ng-include="'app/views/partials/top-navbar.html'" ng-controller="topNavbarCtrl" class="topnavbar-wrapper"></header>
+<!-- sidebar-->
+<aside ng-include="'app/views/partials/sidebar.html'" ng-controller="SidebarController" class="aside"></aside>
+<!-- offsidebar-->
+<aside ng-include="'app/views/partials/offsidebar.html'" class="offsidebar"></aside>
+<!-- Main section-->
+<section>
+	<!-- Page content-->
+	<div ui-view="" autoscroll="false" ng-class="app.viewAnimation" class="content-wrapper"></div>
+</section>
+<!-- Page footer-->
+<footer ng-include="'app/views/partials/footer.html'"></footer>
+<div class="cg-busy cg-busy-backdrop cg-busy-backdrop-animation" ng-if="isLoading" style="opacity: .3;background-color: #000;" ng-if="isLoading"></div>
+<div class="cg-busy-default-wrapper" style="position: absolute; top: 0px; left: 0px; right: 0px; bottom: 0px;" ng-if="isLoading">
+	<div class="cg-busy-default-sign">
+		<div class="cg-busy-default-spinner">
+			<div class="bar1"></div>
+			<div class="bar2"></div>
+			<div class="bar3"></div>
+			<div class="bar4"></div>
+			<div class="bar5"></div>
+			<div class="bar6"></div>
+			<div class="bar7"></div>
+			<div class="bar8"></div>
+			<div class="bar9"></div>
+			<div class="bar10"></div>
+			<div class="bar11"></div>
+			<div class="bar12"></div>
+		</div>
+		<div class="cg-busy-default-text ng-binding">请求数据中..</div>
+	</div>
+</div>

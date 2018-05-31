@@ -1,0 +1,685 @@
+.ngdialog .form-group label,
+.form-inline .form-label {
+	font-weight: normal;
+}
+
+.form-inline .form-group {
+	margin-right: 12px;
+}
+
+.form-inline .form-group.multiline {
+	padding-bottom: 10px;
+}
+
+.form-group .inline-formlabel {
+	display: inline-block;
+}
+
+.form-inline .form-group select.form-control {
+	min-width: 100px;
+}
+
+.form-inline .form-group input.form-control {
+	max-width: 140px;
+}
+
+.form-group .form-autowidth,
+.table .form-autowidth {
+	width: 50px;
+}
+
+.table .form-autowidth {
+	padding: 0 5px;
+}
+
+.form-inline .complex {
+	display: block;
+	font-weight: normal;
+}
+
+.form-group .form-halfwidth,
+.table .form-halfwidth {
+	width: 155px;
+}
+
+.table-condensed fieldset {
+	border-bottom: 0;
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+
+.table-condensed .glyphicon {
+	font-family: 'Glyphicons Halflings';
+}
+
+.form-group .form-lineheight {
+	height: 35px;
+}
+
+.fa-file-o:before {
+	font-size: 12px;
+	line-height: 14px;
+}
+
+.custom-absolute {
+	padding: 5px 15px 0 15px;
+	text-align: left;
+}
+
+.form-horizontal .form-inlineblock {
+	display: block;
+	margin-top: 15px;
+}
+
+.form-horizontal .form-inlineblock .form-label {
+	margin-left: -15px;
+}
+
+.form-horizontal .form-inlineblock .form-control {
+	max-width: 100%;
+	width: 100%;
+}
+
+.custom-bar {
+	height: 100px;
+	width: 100%;
+}
+
+.form-group .col-lg-8 {
+	height: 35px;
+}
+
+.positon-relative {
+	position: relative;
+}
+
+.positon-relative .fix-screen {
+	position: absolute;
+	background-color: rgb(237, 241, 242);
+	cursor: not-allowed;
+	height: 100%;
+	opacity: 0.5;
+	left: 0;
+	top: 0;
+	width: 100%;
+	z-index: 19881117;
+}
+
+.myRoleTable .checkbox {
+	width: auto;
+}
+
+.checkbox-relative {
+	position: relative;
+}
+
+.checkbox-unit {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: 183px;
+	background: white;
+	z-index: 19881117;
+}
+
+.checkbox-unit .form-group {
+	background: white;
+}
+
+.custom-inlineUiSelect .ui-select-container {
+	width: 384px;
+	display: inline-block;
+}
+
+.color-success {
+	color: #27c24c;
+	font-size: 18px;
+}
+
+.color-danger {
+	color: #f05050;
+	font-size: 18px;
+}
+
+.accordion-toggle h5 {
+	line-height: 30px;
+	height: 30px;
+	margin: 10px 0;
+	font-weight: 600;
+	color: #888;
+}
+
+.accordion-toggle .pull-right {
+	line-height: 30px;
+	height: 30px;
+}
+
+.accordion-inner .list-group .list-group-item h5 {
+	line-height: 30px;
+	height: 30px;
+	margin: 0;
+}
+
+.custor-breadcrumb {
+	margin-bottom: 0;
+}
+
+.custor-breadcrumb li a {
+	font-size: 14px;
+	font-weight: 600;
+	color: #999;
+}
+
+.custor-breadcrumb li a:link,
+.custor-breadcrumb li a:visited,
+.custor-breadcrumb li a:active {
+	color: #999;
+	text-decoration: none;
+}
+
+.custor-breadcrumb li a:hover {
+	color: #369;
+	text-decoration: none;
+}
+
+.mycheckbox-inline {
+	height: auto;
+}
+
+.mycheckbox-inline .c-checkbox {
+	width: 50%;
+	margin: 0;
+	box-sizing: border-box;
+	padding-left: 0;
+}
+
+._mycheckbox-inline .c-checkbox {
+	width: auto;
+	margin: 0;
+	box-sizing: border-box;
+	padding-left: 0;
+}
+
+._mycheckbox-inline .one-columu {}
+
+._mycheckbox-inline .one-columu {
+	margin-left: -10px;
+}
+
+.my-list-group li {
+	height: 140px;
+}
+
+.my-list-group li img {
+	width: 100%;
+	height: 100%;
+}
+
+.panel-body .my-responsive {
+	margin-top: 10px;
+	padding-top: 10px;
+}
+
+.custom-bar a.active {
+	font-weight: 600;
+	color: #333;
+}
+
+
+/*首页积分发放图标位置显示*/
+
+#panelChart9 table {
+	top: -13%!important;
+	right: 6%!important;
+}
+
+
+/*首页我的待办过长打点显示*/
+
+.text-show-span {
+	display: inline-block;
+	width: 300px;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.picker-padding {
+	padding: 5px 10px !important;
+}
+
+.btn-add {
+	border: none;
+	text-decoration: underline;
+	color: #3399FF;
+}
+
+
+/*分类设置页面的样式*/
+
+.setting-title {
+	background-color: #E7E7E7;
+	margin-left: 10px;
+	width: 180px;
+	height: 40px;
+	line-height: 40px;
+	border-radius: 8px;
+	text-align: center;
+	font-size: 16px;
+	border: 1px solid #b9b2b2;
+}
+
+.setting-h {
+	border-right: 1px solid;
+	width: 1px;
+}
+
+.setting-h1 {
+	height: 183px;
+	position: absolute;
+	left: 6%;
+}
+
+.setting-h2 {
+	height: 439px;
+	position: absolute;
+	left: 6%;
+	top: 22%;
+}
+
+.first-class {
+	background-color: #E7E7E7;
+	width: 106px;
+	height: 40px;
+	border-radius: 8px;
+	position: relative;
+	margin-left: 8%;
+	margin-top: 10%;
+}
+
+.setting-w {
+	border-top: 1px solid;
+	width: 71px;
+}
+
+.setting-w1 {
+	position: absolute;
+	top: 22%;
+	left: 6%;
+}
+
+.setting-w2 {
+	border-top: 1px solid;
+	width: 71px;
+	position: absolute;
+	bottom: 35%;
+	left: 6%;
+}
+
+.row-new {
+	min-height: 1000px;
+}
+
+.advertisements {
+	margin-top: 19%;
+}
+
+.pc-item {
+	padding: 6px 0;
+}
+
+.pc-item:after {
+	clear: both;
+	display: table;
+	content: "";
+}
+
+.family-members ul li {
+	float: left;
+	height: 120px;
+	width: 70px;
+}
+
+.family-members ul,
+.family-members ul li {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.family-members ul li .img-circle {
+	width: 70px;
+	height: 70px;
+	border-radius: 50%;
+	overflow: hidden;
+	background-color: #ddd;
+	border: solid 1px #369;
+	box-sizing: border-box;
+	text-align: center;
+}
+
+.family-members ul:after {
+	display: table;
+	content: "";
+	clear: both;
+}
+
+.family-members ul li h6 {
+	display: block;
+	height: 20px;
+	line-height: 20px;
+	margin: 0;
+	padding: 0;
+	margin-top: 5px;
+	font-size: 14px;
+	padding-left: 15px;
+}
+
+.family-news {
+	margin-top: 10px;
+}
+
+.family-panel {
+	padding: 20px 0;
+}
+
+.family-panel ul,
+.family-panel li {
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.family-panel li {
+	border-bottom: solid 1px #ddd;
+	line-height: 43px;
+	min-height: 43px;
+}
+
+.family-health:after {
+	display: table;
+	content: "";
+	clear: both;
+}
+
+.family-health-tabs {
+	float: left;
+	width: 120px;
+	height: auto;
+}
+
+.family-health-tabs ul,
+.family-health-tabs li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.family-health-tabs li {
+	border: solid 1px #ddd;
+	background-color: #fff;
+	border-radius: 6px;
+	height: 36px;
+	line-height: 36px;
+	text-align: center;
+	margin-top: 10px;
+}
+
+.family-health-tabs .active {
+	background: #369;
+	color: #fff;
+}
+
+.advertisements-bu {
+	background-color: #E7E7E7;
+	width: 85px;
+	height: 40px;
+	border-radius: 8px;
+	position: relative;
+	margin-left: 11%;
+	margin-top: 1%;
+}
+
+.advertisements-div1 {
+	left: 13%;
+	height: 45px;
+	position: absolute;
+}
+
+.advertisements-div2 {
+	top: 294px;
+	left: 213px;
+	width: 50px;
+	position: absolute
+}
+
+.news-one {
+	left: 133px;
+	height: 60px;
+	position: relative;
+	top: -12px;
+}
+
+.news-two {
+	top: -13px;
+	left: 135px;
+	width: 40px;
+	position: relative;
+}
+
+.btn-ne {
+	margin-top: -56px;
+}
+
+.advertisements {
+	margin-top: 172px;
+}
+
+.news-peple {
+	top: -34px;
+}
+
+.news-peple-button {
+	margin-top: -98px;
+}
+
+
+/*邻里圈子页面样式*/
+
+.quanzi-title {
+	margin-top: 15px;
+}
+
+.head-portrait img {
+	width: 100px;
+	height: 100px;
+	border-radius: 100px;
+	border: 1px solid black;
+}
+
+.head-portrait {
+	display: inline-block;
+	position: relative;
+	left: 51px;
+	top: -33px;
+}
+
+.head-peple {
+	margin-left: -25px;
+	margin-top: 14px;
+}
+
+.des-span {
+	display: block;
+	margin-left: 70px;
+	margin-top: -32px;
+}
+
+.quanzi-main {
+	margin-top: 20px;
+}
+
+.quanzi-header-ID {
+	margin-left: 50px;
+}
+
+.quanzi-logo img {
+	width: 150px;
+	height: 150px;
+	border: 1px solid palevioletred;
+}
+
+.list-line-add {
+	border-top: 1px solid #443f3f;
+	margin-left: -39px;
+}
+
+.quanzi-logo {
+	display: inline-block;
+	position: absolute;
+	right: 209px;
+	top: 124px;
+}
+
+.quanzi-logo-btn {
+	position: absolute;
+	right: 113px;
+	top: 122px;
+}
+
+.quanzi-manager {
+	margin-left: -19px;
+}
+
+.manager-ul ul li {
+	display: inline;
+}
+
+.quanzi-main ul li {
+	display: inline-block;
+}
+
+.label-span {
+	margin: auto 2px;
+	display: inline-block;
+	width: 102px;
+	text-align: center;
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid black;
+	border-radius: 4px;
+}
+
+.quanzi-p-description {
+	text-indent: 46px;
+	margin-top: 2px;
+}
+
+.quanzi-description-title {
+	display: inline-block;
+	position: relative;
+	top: 24px
+}
+
+
+/*上传图片控件样式*/
+
+.uploadBusyBox {
+	position: relative;
+	width: 100px;
+	height: 80px;
+	background: url(../../../img/upload.png);
+	background-size: 100px 80px;
+}
+
+.uploadBusyBox img[role="trigger"] {
+	cursor: pointer;
+	width: 100px;
+	height: 80px;
+}
+
+.uploadBusyBox .delImage {
+	display: none;
+	position: absolute;
+	border: solid 1px #ddd;
+	background-color: #fff;
+	box-sizing: border-box;
+	cursor: pointer;
+	line-height: 10px;
+	width: 16px;
+	height: 16px;
+	right: 0;
+	top: 0;
+	text-align: center;
+	font-size: 16px;
+	color: #aaa;
+}
+
+.uploadBusyBox:hover .delImage {
+	display: block;
+}
+
+.uploadBusyBox[disabled=disabled] .delImage[disabled=disabled],
+.uploadBusyBox[disabled=disabled]:hover .delImage {
+	display: none;
+}
+
+.auto-width {
+	width: auto;
+}
+
+.myMarginBottom .noblock {
+	margin-bottom: 10px;
+	display: block;
+	height: 30px;
+}
+
+.custom-caret {
+	font-size: 20px;
+}
+
+.custom-table>tbody>tr>td {
+	padding: 13px 8px;
+}
+
+.my-panels .panel {
+	padding: 15px 0;
+}
+
+.my-panels .panel:after,
+.my-otherPanel:after {
+	display: table;
+	content: "";
+	clear: both;
+}
+
+.panel .my-otherPanel:not(:last-child) {
+	padding-bottom: 15px;
+	border-bottom: dashed 1px #ddd;
+}
+
+.my-otherPanel {
+	padding-top: 15px;
+}
+
+.myaddBtn {
+	position: absolute;
+	right: 58px;
+	top: 24px;
+	cursor: pointer;
+	z-index: 999;
+	width: 20px;
+	height: 20px;
+	font-size: 20px!important;
+}
+
+.minus .myaddBtn {
+	right: 42px;
+	top: 8px;
+}
+
+.sidebar-subnav>li.islast {
+	border-bottom: dotted 1px #dfdfdf;
+	display: block;
+}

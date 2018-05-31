@@ -1,0 +1,97 @@
+<h3>{{$state.current.title}}</h3>
+
+<div class="panel panel-default">
+	<div class="text-right">
+		<div class="commodity-btn todoAudit">
+			<span class="todoSpan">待审核</span>
+		</div>
+	</div>
+	<div class="row rownew">
+		<div class="form-group  col-lg-4">
+			<div class="form-group-div">商品名称:</div>
+			<span>小龙坎火锅8折优惠券</span>
+		</div>
+		<div class="form-group col-lg-4">
+			<div class="form-group-div">商品编号:</div>
+			<span>23122222</span>
+		</div>
+
+		<div class="form-group col-lg-12">
+			<div class="form-group-div">使用时间:</div>
+			<span>20171130</span>
+		</div>
+		<div class="form-group  col-lg-4">
+			<div class="form-group-div">范围:</div>
+			<span>全部(部分商品)</span>
+		</div>
+		<div class="form-group col-lg-4">
+			<div class="form-group-div">叠加数量:</div>
+			<span>1张</span>
+		</div>
+		<div class="form-group col-lg-12">
+			<div class="form-group-div">照片:</div>
+			<div class="commodityphoto">
+				<img src="" alt="" />
+				<img src="" alt="" />
+				<img src="" alt="" />
+				<img src="" alt="" />
+			</div>
+
+		</div>
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">描述:</div>
+			<span>小龙坎8折优惠券，欢迎到店品尝</span>
+		</div>
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">店铺地址:</div>
+			<span>店铺地址： 志强社区 / 文新院 / 2栋 / 3单元 / 1201</span>
+		</div>
+	</div>
+	<!--结束-->
+	<div class="commodity-line"></div>
+	<div class="row rownew">
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">提交人:</div>
+			<span>彭丽媛</span>
+		</div>
+		<div class="form-group  col-lg-12">
+			<div class="form-group-div">提交时间:</div>
+			<span>2017.11.21~2017.11.30</span>
+		</div>
+		<!--按钮-->
+		<div class="form-group text-center col-lg-12">
+			<button type="button" ng-click="isPass(x)" class="btn btn-default audit-b">不通过</button>
+			<button type="button" ng-click="isPass(x)" class="btn btn-success audit-b">通过</button>
+		</div>
+	</div>
+</div>
+<!--begin ngDialog 添加 createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal">
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">商品名称:</label>
+				<div class=" col-lg-9">
+					<input type="text" ng-model="commi.Name" class="form-control" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-3">备注:</label>
+				<div class=" col-lg-9">
+					<textarea ng-model="commi.value" placeholder="请输入信息" class="form-control " />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+					<button class="btn btn-success" ng-click="formSubmit()">确 定</button>
+
+				</div>
+			</div>
+		</form>
+	</div>
+</script>

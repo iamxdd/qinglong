@@ -1,0 +1,179 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.name" placeholder="请输入名称" class="form-control" />
+					</div>
+
+					<div class="form-group" ng-if="selectTab.Id===1 ||selectTab.Id===2">
+						<label for="input-status">状态：</label>
+						<select id="input-status" ng-change="fetchData()" ng-model='searchOption.state' class="form-control" ng-options='a.index as a.value for a in statusSlect'>
+						</select>
+					</div>
+					<div class="form-group">
+						<input class="datepicker form-control" ng-model="searchOption.date" type="text" id="datetime" />
+					</div>
+
+					<button type="submit" class="btn btn-default">查询</button>
+					<div class="form-group fundation-div">
+						<span ng-if="selectTab.Id===1">当前收到基金总金额:</span>
+						<span ng-if="selectTab.Id===2">当前已使用总基金:</span>
+						<span ng-if="selectTab.Id===3">当前可用余存基金:</span>
+						<span class="fundation-money">{{totalMoney}}</span>元
+					</div>
+
+				</form>
+			</div>
+			<div class="col-lg-4 text-right" ng-if="selectTab.Id===1 || selectTab.Id===2">
+				<button type="button" class="btn btn-success" ng-click="creatOne(selectTab.Id)">新增基金{{addText(selectTab.Id)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr ng-if="selectTab.Id===1">
+					<th>序号</th>
+					<th>基金名称</th>
+					<th>金额(元)</th>
+					<th>状态</th>
+					<th>操作人</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===2">
+					<th>序号</th>
+					<th>名称</th>
+					<th>金额(元)</th>
+					<!--<th>类型</th>-->
+					<th>状态</th>
+					<th>操作人</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+				<tr ng-if="selectTab.Id===3">
+					<th>序号</th>
+					<th>名称</th>
+					<th>金额(元)</th>
+					<th>类型</th>
+					<th>操作人</th>
+					<th>时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="!list||list.length===0">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===1 ">
+					<td>{{$index+1}}</td>
+					<td class="td-hiddens-name" title="{{x.Name}}">{{x.Name}}</td>
+					<td class="td-hiddens-name" title="{{x.Quantity}}">{{x.Quantity}}</td>
+					<td ng-class="statusClass(x.StateName)">{{x.StateName}}</td>
+					<td class="td-hiddens-name" title="{{x.OperationBy}}">{{x.OperationBy}}</td>
+					<td>{{x.OperationAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-if="x.StateName=='待提交'||x.StateName=='未通过'" ng-click="creatTwo(selectTab.Id,x)" class="btn btn-default">修改</button>
+						<button type="button" ng-click="deletelItem(x)" class="btn btn-danger">删 除</button>
+						<button type="button" ng-click="seeItem(selectTab.Id,x)" class="btn btn-default">详情</button>
+
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===2 ">
+					<td>{{$index+1}}</td>
+					<td class="td-hiddens-name" title="{{x.Name}}">{{x.Name}}</td>
+					<td class="td-hiddens-name" title="{{x.Quantity}}">{{x.UseQuantity}}</td>
+					<td ng-class="statusClass(x.StateName)" title="{{x.StateName}}">{{x.StateName}}</td>
+					<td class="td-hiddens-name" title="{{x.OperationBy}}">{{x.OperationBy}}</td>
+					<td>{{x.OperationAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-if="x.StateName=='待提交'||x.StateName=='未通过'" ng-click="creatTwo(selectTab.Id,x)" class="btn btn-default">修改</button>
+						<button type="button" ng-click="deletelItem(x)" class="btn btn-danger">删 除</button>
+						<button type="button" ng-click="seeItem(selectTab.Id,x)" class="btn btn-default">详情</button>
+					</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectTab.Id===3">
+					<td>{{$index+1}}</td>
+					<td class="td-hiddens-name" title="{{x.Name}}">{{x.Name}}</td>
+					<td>{{x.Quantity}}</td>
+					<td>{{x.TypeName}}</td>
+					<td>{{x.CreateBy}}</td>
+					<td>{{x.CreateAt |date:"yyyy-MM-dd HH:mm "}}</td>
+					<td class="text-center ">
+						<button type="button " ng-click="seeItem(selectTab.Id,x) " class="btn btn-success ">查看明细</button>
+
+					</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer ">
+		<div class="row ">
+			<div class="col-lg-12 text-center ">
+				<paging page="pagination.page " page-size="pagination.pageSize " total="pagination.total " show-prev-next="true " show-first-last="true " paging-action="getListSpecifyPage(page,pageSize,total) ">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+
+		<form class="form-horizontal">
+			<div class="form-group" ng-repeat="field in fieldsList" ng-class="{'col-lg-12':field.column===1,'col-lg-6':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-2':field.column===1,'one-columu':field.column===1,'col-lg-4':field.column!==1||!field.column}" ng-if="field.editor!=='line'">{{field.nameDisplay}}</label>
+				<div ng-class="{'col-lg-10':field.column===1,'col-lg-8':field.column!==1||!field.column}">
+					<input ng-if="field.editor==='normal' && !field.unit" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength="50" />
+					<input ng-if="field.editor==='normal' && field.unit==='money'" ng-disabled="field.editable" class="form-control inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" />
+					<input ng-if="field.editor==='normal' && field.unit==='Desmoney'" ng-disabled="field.editable" class="form-control inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" />
+					<input ng-if="field.editor==='normal' && field.unit==='Desmoneynew'" ng-disabled="field.editable" class="form-control inputMoney-new" ng-model="field.value" ng-required="field.required" type="text" />
+
+					<span ng-if="field.unit==='money'" title="{{field.des}}" class="unitMoney">元 {{field.des}}</span>
+					<span ng-if="field.unit==='Desmoney'" title="{{field.des}}" class="unitMoney-new">元 </span>
+
+					<span ng-if="field.unit==='Desmoneynew'" title="{{field.des}}" class="unitMoney-new">元 </span>
+					
+					<select ng-if="field.editor==='select'" id="fundationTypeId" ng-disabled="field.disable" class="form-control" ng-model="field.value" ng-required="field.required" ng-change="selectType(field.value,field.name)" ng-options="x.Id as x.Name for x in field.opts">
+					</select>
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline " ng-repeat="x in field.opts">
+							<input type="radio" ng-disabled="field.disable" ng-model="field.value" name="name_{{field.name}}" value="{{x.Id}}"> {{x.Name }}
+						</label>
+					</div>
+
+					<div class="form-group" ng-if="field.editor==='textarea'">
+						<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit" ng-click="formSubmit()">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>

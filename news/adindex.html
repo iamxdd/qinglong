@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html ng-app="myApp" ng-controller="myCtrl">
+
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title>广告资讯</title>
+		<link rel="stylesheet" type="text/css" href="../app/css/custom/news.css" />
+	</head>
+
+	<body>
+		<div class="container-div" cg-busy="listbusyPromise">
+			<header>
+				<div>
+					<p class="article-title"></p>
+					<span class="news-notes"></span> <span class="news-notes margin-span"></span>
+				</div>
+			</header>
+			<div class="text-center" id="imgCont" style="display: none;">
+				<img id="myImg" style="max-width: 100%;max-height: 300px;" />
+			</div>
+			<section class="content-section">
+			</section>
+		</div>
+		<script src="../app/js/zepto_1.2.0.js"></script>
+		<script src="../app/js/newConfig.js"></script>
+		<script type="text/javascript">
+			Date.prototype.Format = function(fmt) { //author: meizz   
+				var o = {
+					"M+": this.getMonth() + 1, //月份   
+					"d+": this.getDate(), //日   
+					"H+": this.getHours(), //小时   
+					"m+": this.getMinutes(), //分   
+					"s+": this.getSeconds(), //秒   
+					"q+": Math.floor((this.getMonth() + 3) / 3), //季度   
+					"S": this.getMilliseconds() //毫秒   
+				};
+				if(/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+				for(var k in o)
+					if(new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+				return fmt;
+			}
+			var getNewsDetail = function(id, code, token) {
+				//alert(token);
+				var data = {
+					id: id,
+					code: code
+				};
+				var headers = token ? {
+					'Authorization': 'Bearer ' + token
+				} : null;
+				$.ajax({
+					headers: headers,
+					type: "post",
+					url: apiAddsd + "advertisement/adcontent",
+					data: data,
+					dataType: 'json',
+					success: function(response) {
+						var Code = response.State.Code;
+						var Message = response.State.Message;
+						if(Code === 0) {
+							var Content = response.Content.Content;
+							var CreatedAt = new Date(response.Content.CreatedAt).Format("yyyy-MM-dd HH:mm");
+							var CategoryName = response.Content.CategoryName;
+							var Title = response.Content.Title;
+							var MainPic = response.Content.MainPic;
+							$(".content-section").html(Content);
+							$(".article-title").html(Title);
+							$(".news-notes").eq(0).html(CreatedAt);
+							$(".news-notes").eq(1).html(CategoryName);
+							if(!!MainPic) {
+								$("#imgCont").show();
+								$("#myImg").attr("src", MainPic);
+							}
+						} else {
+							alert(Message);
+						}
+					},
+					error: function(xhr, type) {
+						console.log('Ajax error!');
+					}
+
+				});
+			};
+			$("body").on("click", "a", function() {
+				var e = event || window.event;
+				e.preventDefault();
+			});
+		</script>
+	</body>
+
+</html>

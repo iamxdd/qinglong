@@ -1,0 +1,187 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入标题" class="form-control" />
+					</div>
+					<div class="form-group">
+						<label for="organization">党组织：</label>
+						<select id="organization" ng-model='searchOption.partyOrganizationId' class="form-control" ng-change="fetchData()">
+							<option value="0">全部</option>
+							<option ng-repeat="x in partyorganizationlist" value="{{x.Id}}">{{x.Name}}</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-keyword">状态：</label>
+						<select ng-model="searchOption.reviewState" ng-change="fetchData()" class="form-control" ng-options="x.Id as x.Name for x in reviewState"></select>
+					</div>
+					
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">添加</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>标题</th>
+					<th>发布人</th>
+					<th>发布时间</th>
+					<!--<th>发布范围</th>
+					<th>置顶范围</th>-->
+					<th>党组织</th>
+					<th>状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td class="td-hiddens" title="{{x.Title}}">{{x.Title}}</td>
+					<td>{{x.AccountName}}</td>
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<!--<td>{{x.topRanges}}</td>
+					<td>{{x.deRanges}}</td>-->
+					<td class="td-hiddens" title="{{x.PartyOrganizationName}}">{{x.PartyOrganizationName}}</td>
+					<td class="td-hiddens">{{numText(x.ReviewState,reviewState)}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">详情</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn" ng-class="isToggle(x)" ng-bind="toggleText(x)"></button>
+						<!--<button type="button" ng-click="toplItem(x)" class="btn btn-info">置顶设置</button>-->
+						<button type="button" ng-click="deieteItem(x)" class="btn btn-danger">删除</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog _createOne-->
+<script type="text/ng-template" id="_createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">添加党组资讯</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal mycheckbox-inline " cg-busy="ngDialogPromise">
+			<div class="row">
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label class="control-label col-lg-4">标题</label>
+						<div class=" col-lg-8">
+							<input type="text" ng-model="organization.Title" class="form-control" required placeholder="请输入新闻标题" />
+						</div>
+					</div>
+					<div class="form-group">
+						<label class="control-label col-lg-4">党组织</label>
+						<div class=" col-lg-8">
+							<select class="form-control" ng-disabled="disabled" ng-options="x.Id as x.Name for x in partyorganizationlist" ng-model="organization.PartyOrganizationId"></select>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="form-group">
+						<label class="control-label col-lg-4">缩略图</label>
+						<div class=" col-lg-8">
+							<image-file-uploader uif-callback="configImageAfterUpload(url)" default-url="{{defaultImageSrc}}"></image-file-uploader>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!--<div class="form-group">
+				<label class="control-label col-lg-2">发布范围</label>
+				<div class=" col-lg-10">
+					<div class="checkbox checkbox-inline c-checkbox c-checkbox-new" ng-repeat="x in publicationScope">
+						<label>
+							<input type="checkbox" ng-model="x.Checked" ng-change="radioChange()">
+							<span class="fa fa-check"></span> {{x.Name}}
+						</label>
+					</div>
+				</div>
+			</div>
+			<!--置顶范围-->
+			<!--<div class="form-group">
+				<label class="control-label col-lg-2">置顶范围</label>
+				<div class=" col-lg-10">
+					<div class="checkbox checkbox-inline c-checkbox c-checkbox-new" ng-repeat="x in publicationScopeTop">
+						<label>
+							<input type="checkbox" ng-model="x.Checked" ng-disabled="x.editor">
+							<span class="fa fa-check"></span> {{x.Name}}
+						</label>
+					</div>
+				</div>
+			</div>-->
+			<div class="form-group">
+				<label class="control-label col-lg-2">内容</label>
+				<div class=" col-lg-10">
+					<div text-angular="" ng-model="organization.Content" name="wysiswyg-editor" class="btn-group-small" ng-disabled="disabled"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-2">
+					<input type="button" ng-click="closeDialog(0)" class="btn btn-default" value="取消" />
+					<input type="button" ng-click="formSubmit()" class="btn btn-success" value="确 定" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<script type="text/ng-template" id="createTop">
+	<div class="modal-header">
+		<h5 class="modal-title">请选择置顶范围</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>-->
+		<form class="form-horizontal mycheckbox-inline " cg-busy="ngDialogPromise">
+
+			<div class="form-group">
+				<label class="control-label col-lg-2">置顶范围</label>
+				<div class=" col-lg-10">
+					<div class="checkbox checkbox-inline c-checkbox c-checkbox-new" ng-repeat="x in selectPublicationScope">
+						<label>
+							<input type="checkbox" ng-model="x.Checked">
+							<span class="fa fa-check"></span> {{x.Name}}
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				&nbsp;&nbsp;&nbsp;
+			</div>
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-2">
+					<input type="button" ng-click="closeDialog(0)" class="btn btn-default" value="取消" />
+					<input type="button" ng-click="formSubmit()" class="btn btn-success" value="确 定" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->

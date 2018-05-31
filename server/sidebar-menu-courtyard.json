@@ -1,0 +1,363 @@
+[
+    {
+        "text": "西林豫府·院落自治平台", 
+        "heading": "true"
+    }, 
+    {
+        "text": "首页", 
+        "sref": "app.home", 
+        "icon": "icon-home", 
+        "alert": "", 
+        "label": "label label-info"
+    }, 
+    {
+        "text": "院落待办事项", 
+        "sref": "app.event", 
+        "icon": "icon-bell", 
+        "alert": "", 
+        "label": "label label-info"
+    },
+    {
+        "text": "院落待办事项", 
+        "sref": "app.todoList", 
+        "icon": "icon-bell", 
+        "alert": "", 
+        "label": "label label-info"
+    }, 
+    {
+        "text": "院落事件上报中心", 
+        "sref": "app.infoUpload", 
+        "icon": "fa fa-info-circle", 
+        "alert": "", 
+        "label": "label label-info"
+    }, 
+    {
+        "text": "院落事件进度查询", 
+        "sref": "app.eventHandle", 
+        "icon": "fa fa-check-circle-o", 
+        "alert": "", 
+        "label": "label label-info"
+    },
+    {
+        "text": "平安院落", 
+        "sref": "app.yardMonitoring", 
+        "icon": "fa fa-building", 
+        "alert": "", 
+        "label": "label label-info"
+    },
+    {
+        "text": "院落基础资源库", 
+        "sref": "#", 
+        "icon": "icon-book-open", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "房屋管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-fangwuguanli"
+            }, 
+            {
+                "text": "人员管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-juminguanli"
+            }, 
+            {
+                "text": "车辆管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-cheliangguanli"
+            }
+        ]
+    }, 
+    {
+        "text": "院落管理", 
+        "sref": "#", 
+        "icon": "fa fa-building-o", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "流动人口列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-liudongrenkou"
+            }, 
+            {
+                "text": "重点人群列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-zhongdianrenqun"
+            }, 
+            {
+                "text": "驻区企业列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-zhuquqiye"
+            }, 
+            {
+                "text": "常住人口列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "关注人群列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "新闻公告管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-xinwengonggao"
+            }, 
+            {
+                "text": "居民积分管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-juminjifen"
+            }, 
+            {
+                "text": "民主协商管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-minzhuxieshang"
+            },
+            {
+                "text": "民主协商公示", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-xieshanggongshi"
+            }     
+        ]
+    }, 
+    {
+        "text": "圈子管理", 
+        "sref": "#", 
+        "icon": "fa fa-life-ring", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "家庭圈子", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.familyCircle"
+            }, 
+            {
+                "text": "邻里圈", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.neighborhoodCircle"
+            }, 
+            {
+                "text": "院落广场", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.courtyardSquare"
+            }
+        ]
+    },
+    {
+        "text": "基金慈善管理", 
+        "sref": "#", 
+       "icon": "fa fa-money",
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "院落基金管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.fundManagement"
+            }, 
+            {
+                "text": "出资项目管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.appyfundManagement"
+            }, 
+            {
+                "text": "慈善管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.charitableManagement"
+            }, 
+            {
+                "text": "类型设置", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.fundClassSetting"
+            }
+        ]
+    },
+    {
+        "text": "院落党建管理", 
+        "sref": "#", 
+       "icon": "fa fa-flag",
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "党员信息", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyMembers"
+            }, 
+            {
+                "text": "党员注销", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyCancellation"
+            }, 
+            {
+                "text": "党组资讯", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyInformation"
+            },
+            {
+                "text": "党组活动", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyActivity"
+            },
+            {
+                "text": "党组议事厅", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyConferenceHall"
+            },
+            {
+                "text": "党组织机构", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyMechanism"
+            }
+        ]
+    },
+    {
+        "text": "院落组织管理", 
+        "sref": "#", 
+        "icon": "fa fa-sitemap", 
+        "label": "label label-info", 
+        "submenu": [
+             {
+                "text": "组织架构", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zuzhijiagou"
+            }, 
+            {
+                "text": "岗位管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-gangweiguanli"
+            },
+            {
+                "text": "社团管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-shetuanguanli"
+            }
+        ]
+    }, 
+    {
+        "text": "院落自治管理", 
+        "sref": "#", 
+        "icon": "icon-puzzle", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "自治单元管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-wanggeguanli"
+            },
+            {
+                "text": "自治组织管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zizhizuzhi"
+            },            
+            {
+                "text": "自治角色管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zizhijuese"
+            }
+        ]
+    }, 
+    {
+        "text": "院落设备管理",    
+        "sref": "#", 
+        "icon": "fa fa-tablet", 
+        "label": "label label-info",
+        "submenu": [  
+    			{
+    			    "text": "设备管理", 
+    			    "icon": "fa fa-angle-right", 
+    			    "sref": "app.deviceManagement"
+    			}
+         ]
+    },
+    {
+        "text": "院落统计报表", 
+        "sref": "#", 
+        "icon": "fa fa-bar-chart", 
+        "label": "label label-info", 
+        "submenu": [   
+			{
+			    "text": "居民信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-basicfound"
+			},
+			{
+			    "text": "房屋信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-housesInfo"
+			},
+			{
+			    "text": "车辆信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-vehicleInfo"
+			},
+			{
+			    "text": "信息上报统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-infoUpload"
+			},
+            {
+                "text": "院落居民信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build", 
+                "alert": "new"
+            }, 
+            {
+                "text": "院落房屋信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "院落车辆信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "院落重点人群统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "院落流动人口统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "院落企业信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "院落居民积分统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            },  
+             {
+                "text": "资讯报表统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.reportOfmation"
+            }
+        ]
+    },{
+        "text": "院落权限管理", 
+        "sref": "#", 
+        "icon": "icon-pie-chart", 
+        "label": "label label-info", 
+        "submenu": [  
+			{
+			    "text": "用户角色分配", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.acounts"
+			},
+            {
+                "text": "角色菜单配置", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.roles"
+            },
+            {
+                "text": "菜单管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.menus"
+            }
+        ]
+    }
+]

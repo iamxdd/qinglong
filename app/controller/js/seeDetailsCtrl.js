@@ -1,0 +1,2 @@
+/*!qinglongWeb-1.0.0 2017-11-01*/
+App.controller("seeDetailsCtrl",["$scope","$location","$http","ngDialog","PagerExtends","layerAlert",function(a,b,c,d,e,f){a.list=[{},{}],a.navTabList=[{Id:1,Name:"圈子动态",Active:!0},{Id:2,Name:"圈子活动",Active:!1},{Id:3,Name:"相册",Active:!1},{Id:4,Name:"议事厅",Active:!1},{Id:5,Name:"发展史",Active:!1}],a.checked=function(b){a.navTabList.forEach(function(a,c){a.Name===b.Name?a.Active=!0:a.Active=!1}),a.selectTab!==b&&(a.selectTab=b)},a.selectTab=a.navTabList[0]}]);

@@ -1,0 +1,170 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="[listBusyPromise,ngDialogPromise]">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="familyInit(Initurl,searchOption)">
+					<div class="form-group">
+						<label for="input-keyword">关键字：</label>
+						<input id="input-keyword" type="text" placeholder="家庭成员模糊查询" class="form-control" ng-model="searchOption.value" />
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="input-keyword">状态：</label>
+						<select id="inputDev" ng-model="searchOption.dataState" class="form-control" ng-options='a.index as a.value for a in Selectstate' ng-change="familyInit(Initurl,searchOption)">
+						</select>
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+
+				</form>
+			</div>
+
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>家庭成员</th>
+					<!-- <th>位置</th> -->
+					<th>家庭圈ID</th>
+					<th>成员数</th>
+					<th>状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td title="{{x.MemberList}}">{{PcService.subStrDescribe(x.MemberList,20)}}</td>
+					<!-- <td title="{{x.Address}}">{{PcService.subStrDescribe(x.Address,20)}}</td> -->
+					<td title="{{x.Code}}">{{PcService.subStrDescribe(x.Code,20)}}</td>
+					<td>{{x.MemberCount}}</td>
+					<td ng-bind="x.OpenState===1 ? '正常' : '已关闭' " ng-class="x.OpenState===1 ? 'tdgreen' : 'tdRed'"></td>
+					<td class="text-center">
+						<button ng-click="detailItem(x)" class="btn btn-default">查看详情</button>
+						<button ng-click="recyleData(x)" ng-class="PcService.toggleClass(x)" class="btn" ng-bind="x.OpenState!==1 ? '开启' : '关闭'"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}积分事件</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog detailOne-->
+<script type="text/ng-template" id="detailOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<h4>{{Title}} （ID：{{ID}}）
+			<div class="pull-right"><button ng-class="PcService.toggleClass(selectItem)" ng-bind="selectItem.OpenState!==1 ? '开启' : '关闭'" class="btn" ng-click="recyleData(detaList,true)"></button></div>
+		</h4>
+		<!-- <div class="row pc-item">
+			<div class="pc-item-label col-lg-2 detialCss">
+				位置:
+			</div>
+			<div class="pc-item-control col-lg-10">
+				{{Address}}
+			</div>
+		</div> -->
+		<div class="row pc-item">
+			<div class="pc-item-label col-lg-2 detialCss">
+				家庭成员:
+			</div>
+			<div class="pc-item-control col-lg-10">
+				<div class="family-members">
+					<ul>
+
+						<li ng-repeat="x in familyMembrsImage" class="liLeft">
+							<div class="img-circle">
+								<img width="68" height="68" ng-src="{{x.Images}}" />
+							</div>
+							<h6 title="{{x.Name}}">{{PcService.subStrDescribe(x.Name,6)}}</h6>
+							<h6 title="{{x.CheckCode[0].ResidentStatus}}">{{PcService.subStrDescribe(x.CheckCode[0].ResidentStatus)}}</h6>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="family-news">
+			<ul class="nav nav-tabs">
+				<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+					<a ng-click="checked(x)">{{x.Name}}</a>
+				</li>
+			</ul>
+			<div ng-if="selectTab.Id===1" class="panel-body family-panel familyDiv">
+				<ul>
+					<li ng-if="familyStatus.length==0||!familyStatus">
+						暂无任何数据！
+					</li>
+
+					<li ng-repeat="x in familyStatus" title="{{x.Content}}">
+						{{PcService.subStrDescribe(x.Content,50)}}
+						<div class="pull-right">{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</div>
+					</li>
+
+				</ul>
+			</div>
+			<div ng-if="selectTab.Id===2 " class="panel-body family-panel">
+
+				<div class="form-group form-inline">
+					<label for="" class="form-label">姓名：</label>
+					<select name="" ng-model="selectedMember" ng-options="a.Id as a.Name for a in familyMembrsImage" class="form-control">
+					</select>
+				</div>
+				<div class="clearfix">
+				</div>
+				<div class="family-health">
+					<div class="family-health-tabs">
+						<ul>
+							<li ng-class="{'active':x.Active}" ng-repeat="x in leftTabs track by $index" ng-click="choseItem(x)">{{x.Name}}</li>
+						</ul>
+					</div>
+					<div class="family-health-cont">
+						<img ng-src="{{familyImgTiJian(Title)}}" alt="">
+
+					</div>
+				</div>
+			</div>
+		</div>
+		<!--<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>-->
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer" ng-if="selectTab.Id===1 && familyStatus.length!==0">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog detailOne-->

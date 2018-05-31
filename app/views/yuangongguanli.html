@@ -1,0 +1,172 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" ng-model="searchOption.name" type="text" placeholder="请输入员工姓名" class="form-control" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{$state.current.title.substring(0,2)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>编号</th>
+					<th>姓名</th>
+					<th>性别</th>
+					<th>岗位</th>
+					<th>属于部门</th>
+					<th class="text-center">工作轨迹</th>
+					<th>联系方式</th>
+					<th>排序</th>
+					<th>邮箱</th>
+					<th>备注</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Empno}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{numberTOText(x.Sex,gender)}}</td>
+					<td>{{x.PositionName}}</td>
+					<td>{{x.OrganizationsName}}</td>
+					<td class="text-center">
+						<button class="btn btn-link" ng-click="workingList(x)">查看详情</button>
+					</td>
+					<td>{{x.Telephone}}</td>
+					<td>{{x.Sort}}</td>
+					<td>{{x.Email}}</td>
+					<td>{{x.Remark}}</td>
+					<td class="text-center">
+						<!--<button type="button" ng-click="configItem(x)" class="btn btn-default">分配账号</button>-->
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn" ng-class="toggleClass(x)" ng-bind="toggleText(x)"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}员工</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" ng-if="create">
+			<div class="form-group">
+				<label class="control-label col-lg-2">搜索员工</label>
+				<div class="col-lg-10">
+					<input class="form-control" type="text" placeholder="输入完整的身份证号码来搜索居民" ng-model="IDCardNo" ng-blur="getMoreInfo(IDCardNo)" />
+				</div>
+			</div>
+		</form>
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="2"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog configOne-->
+<script type="text/ng-template" id="configOne">
+	<div class="modal-header">
+		<h5 class="modal-title">分配账号</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()" column="column"></div>
+	</div>
+</script>
+<!--end ngDialog configOne-->
+
+<!--begin ngDialog workList-->
+<script type="text/ng-template" id="workList">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}工作轨迹</h5>
+	</div>
+	<div class="modal-body" cg-busy="listBusyPromise">
+		<form class="form-horizontal" ng-submit="workListSure()">
+			<div class="form-group multiline worklist-group" ng-repeat="x in workfields">
+				<div class="inline-formlabel" class="double-input" ng-if="x.editor==='double-datePick'">
+					<div class="input-group work-group">
+						<span style="position: relative; z-index: 99;">
+						<input class="datepicker form-control worklist" ng-model="x.value1" type="text" id="datetimeStart" />
+						</span>
+						<!-- <span class="input-group-addon"><i class="fa fa-calendar bigger-110"></i></span> -->
+					</div>
+					<div class="inline-formlabel inline-hengxian">&nbsp;&nbsp;&nbsp;- &nbsp;&nbsp;&nbsp;
+					</div>
+					<div class="input-group work-group">
+						<span style="position: relative; z-index: 99;">
+						<input class="datepicker form-control worklist" ng-model="x.value2" type="text" id="datetimeEnd" />
+						</span>
+					</div>
+				</div>
+			</div>
+			<div class="form-group workquery">
+				<button type="submit" class="btn btn-default">查询</button>
+			</div>
+			<div class="clearfix"></div>
+		</form>
+		<div class="table-responsive my-responsive">
+			<table class="table table-bordered table-hover">
+				<thead>
+					<tr>
+						<th>序号</th>
+						<th>时间</th>
+						<th>星期</th>
+						<th>地点</th>
+						<th>备注信息</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-if="new_list.length==0||!new_list">
+						<td colspan="20">暂无任何数据！</td>
+					</tr>
+					<tr ng-repeat="x in new_list">
+						<td>{{$index+1}}</td>
+						<td>{{x.UploadAt | date:"yyyy-MM-dd HH:mm"}}</td>
+						<td>{{x.weekDay}}</td>
+						<td title={{x.Remark}}>{{x.Address}}</td>
+						<td title={{x.Remark}}>{{x.Remark}}</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="panel-footer" ng-if="new_list.length>0">
+			<div class="row">
+				<div class="col-lg-12 text-center">
+					<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+					</paging>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog workList-->

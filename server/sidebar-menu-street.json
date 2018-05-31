@@ -1,0 +1,387 @@
+[
+    {
+        "text": "青龙街道·综合管理平台", 
+        "heading": "true"
+    }, 
+    {
+        "text": "首页", 
+        "sref": "app.home", 
+        "icon": "icon-home", 
+        "alert": "", 
+        "label": "label label-info"
+    },
+    {
+        "text": "街道事件进度查询", 
+        "sref": "app.eventHandle", 
+        "icon": "fa fa-check-circle-o", 
+        "alert": "", 
+        "label": "label label-info"
+    },
+    {
+        "text": "街道基础资源库", 
+        "sref": "#", 
+        "icon": "icon-book-open", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "房屋管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-fangwuguanli"
+            }, 
+            {
+                "text": "人员管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-juminguanli"
+            }, 
+            {
+                "text": "车辆管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shequ-cheliangguanli"
+            }
+        ]
+    }, 
+    {
+        "text": "街道管理", 
+        "sref": "#", 
+        "icon": "fa fa-building-o", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "流动人口列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-liudongrenkou"
+            }, 
+            {
+                "text": "重点人群列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-zhongdianrenqun"
+            }, 
+            {
+                "text": "驻区企业列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-zhuquqiye"
+            }, 
+            {
+                "text": "常住人口列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "关注人群列表", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "新闻公告管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-xinwengonggao"
+            }, 
+            {
+                "text": "居民积分管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-juminjifen"
+            }, 
+            {
+                "text": "民主协商管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-minzhuxieshang"
+            },
+            {
+                "text": "民主协商公示", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-xieshanggongshi"
+            }     
+        ]
+    }, 
+    {
+        "text": "街道资讯管理", 
+        "sref": "#", 
+        "icon": "fa fa-newspaper-o", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "社区资讯", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.communityNews"
+            },  
+            {
+                "text": "资讯分类设置", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.classificationSettings"
+            }
+        ]
+    },
+    {
+        "text": "街道党建管理", 
+        "sref": "#", 
+       "icon": "fa fa-flag",
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "党员信息", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyMembers"
+            }, 
+            {
+                "text": "党员注销", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyCancellation"
+            }, 
+            {
+                "text": "党组资讯", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyInformation"
+            },
+            {
+                "text": "党组活动", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyActivity"
+            },
+            {
+                "text": "党组议事厅", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyConferenceHall"
+            },
+            {
+                "text": "党组织机构", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.PartyMechanism"
+            }
+        ]
+    },
+    {
+        "text": "街道组织管理", 
+        "sref": "#", 
+        "icon": "fa fa-sitemap", 
+        "label": "label label-info", 
+        "submenu": [
+             {
+                "text": "组织架构", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zuzhijiagou"
+            }, 
+            {
+                "text": "岗位管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-gangweiguanli"
+            },
+            {
+                "text": "社团管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-shetuanguanli"
+            }
+        ]
+    }, 
+    {
+        "text": "街道自治管理", 
+        "sref": "#", 
+        "icon": "icon-puzzle", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "自治单元管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.shijian-wanggeguanli"
+            },
+            {
+                "text": "自治组织管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zizhizuzhi"
+            },            
+            {
+                "text": "自治角色管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.zuzhi-zizhijuese"
+            }
+        ]
+    }, 
+    {
+        "text": "街道员工管理", 
+        "sref": "app.employee", 
+        "icon": "fa icon-user", 
+        "alert": "", 
+        "label": "label label-info"
+    }, 
+    {
+        "text": "街道系统设置", 
+        "sref": "#", 
+        "icon": "icon-magic-wand",  
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "工作流管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.peizhi-gongzuoliu", 
+                "alert": "new"
+            },
+            {
+                "text": "工作组管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.workGroups", 
+                "alert": "new"
+            }, 
+            {
+                "text": "拥有者管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.Owers", 
+                "alert": "new"
+            },
+            {
+                "text": "事项模板管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.peizhi-shixiangmuban", 
+                "alert": "new"
+            },          
+            {
+                "text": "信息上报模板", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.peizhi-shangbaomuban", 
+                "alert": "new"
+            },
+            {
+                "text": "组织类型管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.peizhi-zuzhileixing"
+            },      
+            {
+                "text": "版本管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.projects"
+            }
+        ]
+    }, 
+    {
+        "text": "街道信息设置", 
+        "sref": "#", 
+        "icon": "fa fa-file-text", 
+        "label": "label label-info", 
+        "submenu": [
+            {
+                "text": "街道介绍", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.communityIntroduction"
+            },
+            {
+                "text": "办事指南", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.workGuide"
+            }, 
+            {
+                "text": "网格服务", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.gridService"
+            }, 
+            {
+                "text": "机构电话", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.mechanismCall"
+            },          
+            {
+                "text": "预约办事", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.appointment"
+            },
+            {
+                "text": "意见建议", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.feedback"
+            },
+            {
+                "text": "积分规则", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.IntegralRule"
+            }
+        ]
+    },
+    {
+        "text": "街道统计报表", 
+        "sref": "#", 
+        "icon": "fa fa-bar-chart", 
+        "label": "label label-info", 
+        "submenu": [   
+			{
+			    "text": "居民信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-basicfound"
+			},
+			{
+			    "text": "房屋信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-housesInfo"
+			},
+			{
+			    "text": "车辆信息统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-vehicleInfo"
+			},
+			{
+			    "text": "信息上报统计", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.statistic-infoUpload"
+			},
+            {
+                "text": "街道居民信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build", 
+                "alert": "new"
+            }, 
+            {
+                "text": "街道房屋信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "街道车辆信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "街道重点人群统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "街道流动人口统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "街道企业信息统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            }, 
+            {
+                "text": "街道居民积分统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.build"
+            },  
+             {
+                "text": "资讯报表统计", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.reportOfmation"
+            }
+        ]
+    },{
+        "text": "街道权限管理", 
+        "sref": "#", 
+        "icon": "icon-pie-chart", 
+        "label": "label label-info", 
+        "submenu": [  
+			{
+			    "text": "用户角色分配", 
+			    "icon": "fa fa-angle-right", 
+			    "sref": "app.acounts"
+			},
+            {
+                "text": "角色菜单配置", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.roles"
+            },
+            {
+                "text": "菜单管理", 
+                "icon": "fa fa-angle-right", 
+                "sref": "app.menus"
+            }
+        ]
+    }
+]

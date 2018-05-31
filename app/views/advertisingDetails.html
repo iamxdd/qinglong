@@ -1,0 +1,83 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+
+<div class="panel panel-default " id="advertisements-details" cg-busy="listBusyPromise">
+	<div  id="advertisements-details-panel">
+		<div class="row">
+			<div class="col-lg-8">
+				<header class="text-center">
+					<h4>渝富桥年底活动</h4>
+					<span>发布人：</span>习大大 &nbsp;&nbsp;&nbsp;&nbsp;
+					<span>发布时间：</span>2017.10.23 15:21
+				</header>
+
+			</div>
+
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">待审核</button>
+			</div>
+
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<!--1-->
+		<div>
+			<ul>
+				<li>
+					<p class="advertisements-theme">行业优势</p>
+					<span class="tet-indent">
+						足疗源自中国，在中国有着5000多年的历史，足疗按摩、足底疗法等与中国传统医学有着密切的关系。现在，“中医保健、绿色休闲”已大势所趋，必将成为新一轮保健浪潮的热点，成为21世纪的白金产业！因此，只要把握商机，肯定会有丰厚回报。 而逐步规范管理和标准服务的四川渝富桥投资管理有限公司，邀您在迈向成功的途中，一路同行！
+					</span>
+				</li>
+				<li>
+					<p class="advertisements-theme">卓越的品牌优势</p>
+					<span class="tet-indent">
+						“渝富桥”品牌独特，文化底蕴深厚，充分体现健康、规范、实效，突出注重品牌文化建设、意识、理念及其核心竞争力，精心打造休闲、浴足、保健****品牌。
+					</span>
+				</li>
+				<li>
+					<p class="advertisements-theme">品牌特有项目优势</p>
+					<span class="tet-indent">
+						“渝富桥”品牌与其他品牌不同之处是：定位中高端商务消费层，项目综合了品茗、商务棋牌、商务洽谈、商务会议、咖啡、中医足疗、保健、KTV、餐饮、商务酒店等，可根据各地各店的情况多重选择，功能完善，利润回报率高。 
+					</span>
+				</li>
+				<li>
+					<p class="advertisements-theme">品牌特有项目优势</p>
+					<span class="tet-indent">
+						“渝富桥”品牌与其他品牌不同之处是：定位中高端商务消费层，项目综合了品茗、商务棋牌、商务洽谈、商务会议、咖啡、中医足疗、保健、KTV、餐饮、商务酒店等，可根据各地各店的情况多重选择，功能完善，利润回报率高。 
+					</span>
+				</li>
+
+			</ul>
+		</div>
+		<!--2-->
+
+	</div>
+
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog seeOne-->
+<script type="text/ng-template" id="seeOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body " id="advertisements-details-ngDialog" cg-busy="ngDialogPromise">
+		<div class="form-horizontal" cg-busy="ngDialogPromise">
+			<div>
+				<div class="text-center">
+					<img src="app/img/bg1.jpg" alt=""  class="check-logo"/>
+				</div>
+				<h4>确认此信息准确无误</h4>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button class="btn btn-default" ng-click="closeDialog(0)">不通过</button>
+					<button class="btn  btn-success" ng-click="closeDialog(0)">通过</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</script>
+<!--end ngDialog seeOne-->

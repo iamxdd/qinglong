@@ -1,0 +1,57 @@
+<h3>{{$state.current.title}}</h3>
+<ul class="nav nav-pills">
+	<li ng-repeat="x in navList" ng-class="{active:x.Checked}">
+		<a ng-click="CheckItem(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12" id="myEcharts" style="height: 400px;">
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>社区</th>
+					<th ng-repeat="x in xAxisArray track by $index">{{x}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="seriesArray==0||!seriesArray">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr>
+					<td>{{seriesNames[0]}}</td>
+					<td ng-repeat="y in seriesArray track by $index">{{y}}</td>
+
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增组织</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

@@ -1,0 +1,109 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder="请输入名称" class="form-control" />
+					</div>
+
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">添加</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover" style="min-width: 1600px;">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>名称</th>
+					<th>党组织编号</th>
+					<th>负责人</th>
+					<!-- <th>核实人</th> -->
+					<th>创建时间</th>
+					<th>备注</th>
+					<th>状态</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index+1}}</td>
+					<td title="{{x.Name}}">{{PcService.subStrDescribe(x.Name)}}</td>
+					<td>{{x.PartyNumber}}</td>
+					<td>{{x.PrincipalName}}</td>
+					<!-- <td>{{x.ReviewerName}}</td> -->
+					<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td title="{{x.Describe}}">{{PcService.subStrDescribe(x.Describe,15)}}</td>
+					<td ng-bind="(x.PartyState===1 ? '正常' : (x.PartyState===2 ? '已关闭' : '已解散'))"></td>
+					<td>
+						<button  type="button"  class="btn btn-default" ng-click="creatOne(x)">修改</button>
+						<button type="button" ng-click="detailItem(x)" class="btn btn-default">详情</button>
+						<button ng-if="x.PartyState==1 || x.PartyState==2 " type="button" ng-click="toggleItem(x,1)" class="btn" ng-class="isToggle(x)" ng-bind="toggleText(x)"></button>
+						<button ng-disabled="x.PartyState===3" type="button" ng-click="toggleItem(x,2)" class="btn btn-danger" ng-bind="(x.PartyState===3 ? '已解散' : '解散')"></button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog _createOne-->
+<script type="text/ng-template" id="_createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{Texttitle}}</h5>
+	</div>
+	<div class="modal-body"  cg-busy="ngDialogPromise">
+		<form class="form-horizontal ">
+
+			<div class="form-group  col-lg-12">
+				<label class="control-label col-lg-2">标题</label>
+				<div class=" col-lg-4">
+					<input type="text" ng-model="news.Title" class="form-control" required placeholder="请输入标题" />
+				</div>
+			</div>
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-2">负责人</label>
+				<div class=" col-lg-4">
+					<select class="form-control" ng-disabled="disabled" ng-options="x.Id as x.Name for x in categoryCodes" ng-model="news.CategoryId"></select>
+				</div>
+			</div>
+
+			<div class="form-group col-lg-12">
+				<label class="control-label col-lg-2">党组织描述</label>
+				<div class=" col-lg-10">
+					<textarea name="" rows="" cols="" class=" col-lg-8 textarea-new" ng-model="news.remark"></textarea>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-2">
+					<input type="button"  ng-click="closeThisDialog(0)" class="btn btn-default" value="取消" />
+					<input type="button" ng-click="formSubmit()" class="btn btn-success" value="确 定" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->

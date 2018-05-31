@@ -1,0 +1,2 @@
+/*!qinglongWeb-1.0.0 2017-11-01*/
+App.controller("anquanxiaofangCtrl",["$scope","$http","ngDialog","PagerExtends","layerAlert","serverUrls",function(a,b,c,d,e,f){a.list=[{},{}],a.creatOne=function(){c.openConfirm({template:"createOne",controller:"anquanxiaofangCtrl",className:"ngdialog-theme-default",closeByDocument:!1})}}]);

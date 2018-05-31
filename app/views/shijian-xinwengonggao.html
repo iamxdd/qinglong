@@ -1,0 +1,278 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="nav nav-tabs">
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise" ng-if="selectItem.Id===1">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group multiline col-lg-4" ng-repeat="x in screenfields" ng-if="$index<2">
+						<label for="input-{{x.name}}">{{x.nameDisplay}}：</label>
+						<input ng-if="x.editor==='normal'" id="input-{{x.name}}" ng-model="x.value" type="text" placeholder="请输入关键字" class="form-control" />
+						<select ng-if="x.editor==='select'" ng-change="fetchData()" id="input-{{x.name}}" ng-model="x.value" class="form-control" ng-options="e.Id as e.Name for e in x.opts"></select>
+						<div ng-controller="xinwengonggaoCtrl" class="inline-formlabel" ng-if="x.editor==='double-datePick'" class="double-input">
+							<div class="form-group">
+								<input class="datepicker form-control" ng-model="x.value1" type="text" id="datetimeStart" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,0)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value1" is-open="opened[0]" max-date="x.value2" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+							<div class="inline-formlabel">- &nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="form-group">
+								<input class="datepicker form-control" ng-model="x.value2" type="text" id="datetimeEnd" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,1)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value2" is-open="opened[1]" min-date="x.value1" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+						</div>
+					</div>
+					<div class="clearfix">
+
+					</div>
+					<div class="form-group multiline" ng-repeat="x in screenfields" ng-if="$index>=2">
+						<label for="input-{{x.name}}">{{x.nameDisplay}}：</label>
+						<input ng-if="x.editor==='normal'" id="input-{{x.name}}" ng-model="x.value" type="text" placeholder="请输入关键字" class="form-control" />
+						<select ng-if="x.editor==='select'" id="input-{{x.name}}" ng-model="x.value" class="form-control" ng-options="e.Id as e.Name for e in x.opts"></select>
+						<div ng-controller="xinwengonggaoCtrl" class="inline-formlabel" ng-if="x.editor==='double-datePick'" class="double-input">
+							<div class="form-group">
+								<input class="datepicker form-control picker-padding" ng-model="x.value1" type="text" id="datetimeStart" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,0)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value1" is-open="opened[0]" max-date="x.value2" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+							<div class="inline-formlabel">- &nbsp;&nbsp;&nbsp;
+							</div>
+							<div class="form-group">
+								<input class="datepicker form-control picker-padding" ng-model="x.value2" type="text" id="datetimeEnd" />
+								<!--<input class="form-control form-halfwidth" ng-click="open($event,1)" type="text" name="date" datepicker-popup="{{format}}" ng-model="x.value2" is-open="opened[1]" min-date="x.value1" datepicker-options="dateOptions" date-disabled="false" close-text="关闭" />-->
+							</div>
+						</div>
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">查询</button>
+					</div>
+					<div class="clearfix">
+					</div>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">发布{{$state.current.title.substring(2,4)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive my-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>新闻标题</th>
+					<th>新闻类型</th>
+					<!--<th>概述</th>-->
+					<th>发布范围</th>
+					<th>发布状态</th>
+					<th>作者</th>
+					<th>发表时间</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length===0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list" ng-if="selectItem.Id===1">
+					<td>{{x.$index}}</td>
+					<td title="{{x.Title}}">{{PcService.subStrDescribe(x.Title,10)}}</td>
+					<td>{{x.CategoryName}}</td>
+					<!--<td>{{PcService.subStrDescribe(x.Abstract,10)}}</td>-->
+					<td title="{{ChannelTypes(x.ChannelList)}}">{{PcService.subStrDescribe(ChannelTypes(x.ChannelList),15)}}</td>
+					<td>{{PcService.numberToText(x.State,publicationStatus)}}</td>
+					<td title="{{x.Author}}">{{PcService.subStrDescribe(x.Author,10)}}</td>
+					<td>{{x.UpdatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+					<td class="text-center">
+						<button type="button" ng-disabled="isDisabled(x)" ng-click="editItem(x)" class="btn btn-default">修 改</button>
+						<button type="button" ng-click="checkItem(x)" ng-class="classItem(x)" ng-disabled="disabledItem(x)" class="btn">审 核</button>
+						<!--<button type="button" ng-click="toggleItem(x)" class="btn btn-info">发 布</button>-->
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+<!-- END table-responsive-->
+
+<!--新闻类型列表[[-->
+<div class="panel panel-default" ng-if="selectItem.Id===2">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input type="text" ng-model="categoryOption.value" class="form-control" placeholder="请输入名称" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="editCategory()" class="btn btn-success">新增新闻类型</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive my-responsive">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>名称</th>
+				<th>识别码</th>
+				<th>创建时间</th>
+				<th class="text-center">操作</th>
+			</tr>
+			<tr ng-repeat="x in list">
+				<td>{{x.$index}}</td>
+				<td>{{x.ParentName}}<span ng-if="x.ParentName">----</span>{{x.Name}}</td>
+				<td>{{x.Code}}</td>
+				<td>{{x.CreatedAt|date:"yyyy-MM-dd HH:mm"}}</td>
+				<td class="text-center">
+					<button ng-click="editCategory(x)" class="btn btn-default">修 改</button>
+					<button ng-click="deleteCategory(x)" class="btn btn-danger">删 除</button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!--新闻类型列表]]-->
+<!--发布单位列表[[-->
+<div class="panel panel-default" ng-if="selectItem.Id===3">
+	<div class="panel-body">
+		<div class="row">
+			<div class="col-lg-8">
+				<form role="form" class="form-inline" ng-submit="fetchData()">
+					<div class="form-group">
+						<label for="input-keyword" class="sr-only">关键字：</label>
+						<input type="text" ng-model="channelOption.name" class="form-control" placeholder="请输入名称" />
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-4 text-right">
+				<button type="button" ng-click="editCategory()" class="btn btn-success">新增发布范围</button>
+			</div>
+		</div>
+	</div>
+	<div class="table-responsive my-responsive">
+		<table class="table table-bordered">
+			<tr>
+				<th>序号</th>
+				<th>名称</th>
+				<th>状态</th>
+				<th class="text-center">操作</th>
+			</tr>
+			<tr ng-repeat="x in list">
+				<td>{{x.$index}}</td>
+				<td>{{x.Name}}</td>
+				<td>
+					<div class="label" ng-class="PcService.toggleLabelClass(x)">{{PcService.stateText(x)}}</div>
+				</td>
+				<td class="text-center">
+					<button ng-click="editCategory(x)" class="btn btn-default">修 改</button>
+					<button ng-bind="PcService.toggleText(x)" ng-class="PcService.toggleClass(x)" ng-click="toggleCategory(x)" class="btn"></button>
+				</td>
+			</tr>
+		</table>
+	</div>
+</div>
+<!--发布范围列表]]-->
+
+<div class="panel-footer">
+	<div class="row">
+		<div class="col-lg-12 text-center">
+			<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+			</paging>
+		</div>
+	</div>
+</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="_createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}{{$state.current.title.substring(2,4)}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<form class="form-horizontal" ng-submit="formSubmit()" cg-busy="ngDialogPromise">
+			<div class="form-group">
+				<label class="control-label col-lg-2">标题</label>
+				<div class=" col-lg-10">
+					<input type="text" ng-model="news.Title" class="form-control" required placeholder="请输入新闻标题" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">新闻分类</label>
+				<div class=" col-lg-10">
+					<select class="form-control" ng-disabled="disabled" ng-options="x.Id as x.Name for x in newsTypes" ng-model="news.CategoryId"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">发布作者</label>
+				<div class=" col-lg-10">
+					<input type="text" ng-model="news.Author" class="form-control" placeholder="请输入发布作者" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">发布内容</label>
+				<div class=" col-lg-10" style="height: auto;">
+					<div text-angular="" ng-model="news.Content" name="wysiswyg-editor" class="btn-group-small" ng-disabled="disabled"></div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">内容摘要</label>
+				<div class=" col-lg-10">
+					<input type="text" ng-model="news.Abstract" class="form-control" placeholder="请输入内容摘要" />
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-2">发布范围</label>
+				<div class=" col-lg-10">
+					<ui-select multiple="" ng-model="news.ChannelType" theme="bootstrap" ng-required="true">
+						<ui-select-match placeholder="请选择发布范围">{{$item.Name}}</ui-select-match>
+						<ui-select-choices repeat="x in publicationScope">{{x.Name}}</ui-select-choices>
+					</ui-select>
+					<!--<select ng-disabled="disabled" class="form-control" ng-model="news.ChannelType" ng-options="x.Id as x.Name for x in publicationScope"></select>-->
+				</div>
+			</div>
+			<div class="form-group">
+				<div class=" col-lg-10 col-lg-offset-2">
+					<input type="submit" ng-if="create" class="btn btn-success" value="发布新闻" />
+					<input type="submit" ng-if="!create" class="btn btn-success" value="保存新闻" />
+					<input type="button" ng-if="create" ng-click="saveDraft()" class="btn btn-default" value="保存草稿" />
+					<input type="button" ng-if="!create" ng-click="saveDraft()" class="btn btn-default" value="保存草稿" />
+					<input type="button" ng-if="disabled" ng-click="closeDialog(0)" class="btn btn-default" value="关闭" />
+				</div>
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="creatNewsTypes">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit()"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->

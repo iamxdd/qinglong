@@ -1,0 +1,211 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<ul class="breadcrumb custor-breadcrumb">
+	<li ng-repeat="x in navTabList" ng-class="{active:x.Active}">
+		<a ng-click="checked(x)">{{x.Name}}</a>
+	</li>
+</ul>
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-10">
+				<form role="form" class="form-inline" ng-submit="fetchData(checkedItem.Id)">
+					<div class="form-group" ng-if="showOption[0]">
+						<label for="id_name" class="form-label">关键字：</label>
+						<input class="form-control" id="id_name" placeholder="关键字查询" ng-model="searchOption.name" type="text" />
+					</div>
+					<div class="form-group" ng-if="showOption[1] && searchLists.list1.length > 0">
+						<label for="id_courtyardid" class="form-label">院 落：</label>
+						<select ng-change="checkChange(searchOption.courtyardid,2)" class="form-control" id="id_courtyardid" ng-model="searchOption.courtyardid" ng-options="a.Id as a.Name for a in searchLists.list1"></select>
+					</div>
+					<div class="form-group" ng-if="showOption[2] && searchLists.list2.length > 0">
+						<label for="id_buildingid" class="form-label">楼 栋：</label>
+						<select ng-change="checkChange(searchOption.buildingid,3)" class="form-control" id="id_buildingid" ng-model="searchOption.buildingid" ng-options="a.Id as a.Name for a in searchLists.list2"></select>
+					</div>
+					<div class="form-group" ng-if="showOption[3] && searchLists.list3.length > 0">
+						<label for="id_unitid" class="form-label">单 元：</label>
+						<select ng-change="checkChange(searchOption.unitid,4)" class="form-control" id="id_unitid" ng-model="searchOption.unitid" ng-options="a.Id as a.Name for a in searchLists.list3"></select>
+					</div>
+					<button type="submit" class="btn btn-default">查询</button>
+				</form>
+			</div>
+			<div class="col-lg-2 text-right" ng-if="ifNew">
+				<button type="button" ng-click="creatOne()" class="btn btn-success">新增{{checkedItem.Name.substring(0,2)}}</button>
+			</div>
+		</div>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover">
+			<thead>
+				<tr>
+					<th ng-repeat="x in checkedItem.talbeTitle" ng-class="{'text-center':$index==checkedItem.talbeTitle.length-1}">{{x}}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===1" ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.Name}}</td>
+					<td>{{x.Address}}</td>
+					<td>{{x.TotalBuilding}}</td>
+					<td>{{x.households}}</td>
+					<td>{{x.PropertyPhone}}</td>
+					<td>{{x.Remark}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改</button>
+						<button type="button" ng-click="toggleItem(x)" class="btn" ng-class="isToggle(x)" ng-bind="toggleText(x)"></button>
+					</td>
+				</tr>
+				<tr ng-if="checkedItem.Id===2" ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.CourtyardName}}</td>
+					<td> {{x.Name}}</td>
+					<td>{{x.UnitNum}}</td>
+					<td>{{x.FloorNum}}</td>
+					<td>{{x.FloorHouseNum}}</td>
+					<td>{{x.SumHouseNum}}</td>
+					<!--<td class="text-center">
+						<button type="button" ng-click="deleteItem(2,x)" class="btn btn-danger">删除</button>
+					</td>-->
+				</tr>
+				<tr ng-if="checkedItem.Id===3" ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.BuildingCourtyardName}}</td>
+					<td>{{x.BuildingName}}</td>
+					<td>{{x.Name}}</td>
+					<!--<td class="text-center">
+						<button type="button" ng-click="deleteItem(3,x)" class="btn btn-danger">删除</button>
+					</td>-->
+				</tr>
+				<tr ng-if="checkedItem.Id===4" ng-repeat="x in list">
+					<td>{{x.$index}}</td>
+					<td>{{x.FloorUnitBuildingCourtyardName}}</td>
+					<td>{{x.FloorUnitBuildingName}}</td>
+					<td>{{x.FloorUnitName}}</td>
+					<td>{{x.RoomNumber}}</td>
+					<td class="text-center">
+						<button type="button" ng-click="residentItem(x)" class="btn btn-default">查看居民</button>
+						<button type="button" ng-click="vehicleItem(x)" class="btn btn-default">查看车辆</button>
+						<button type="button" ng-click="editItem(x)" class="btn btn-default">修改信息</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}{{checkedItem.Name.substring(0,2)}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<div class="form-horizontal" ng-if="checkedItem.Id===4 && editing">
+			<div class="form-group">
+				<label class="control-label col-lg-3">搜索房主</label>
+				<div class="col-lg-9">
+					<input type="text" class="form-control" ng-model="homeOwer" ng-blur="getHomeowner(homeOwer)" placeholder="居民关键字查询" />
+				</div>
+			</div>
+			<div class="form-group" ng-if="Homeowners.length<=1">
+				<label class="control-label col-lg-3">房主ID</label>
+				<div class="col-lg-9">
+					<input type="text" ng-disabled="true" ng-model="addNew.HomeownerId" class="form-control" ng-blur="getHomeowner(homeOwer)" />
+				</div>
+			</div>
+			<div class="form-group" ng-if="Homeowners.length>1">
+				<label class="control-label col-lg-3">更改房主</label>
+				<div class="col-lg-9">
+					<select chosen="" ng-model="addNew.HomeownerId" class="form-control chosen-select" ng-options="x.Id as x.Name for x in Homeowners"></select>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="control-label col-lg-3">搜索户主</label>
+				<div class="col-lg-9">
+					<input type="text" class="form-control" ng-model="homeHolders" ng-blur="getHolders(homeHolders)" placeholder="居民关键字查询" />
+				</div>
+			</div>
+			<div class="form-group" ng-if="Holders.length<=1">
+				<label class="control-label col-lg-3">户主ID</label>
+				<div class="col-lg-9">
+					<input type="text" ng-disabled="true" ng-model="addNew.HolderId" class="form-control" ng-blur="getHomeowner(homeOwer)" />
+				</div>
+			</div>
+			<div class="form-group" ng-if="Holders.length>1">
+				<label class="control-label col-lg-3">更改户主</label>
+				<div class="col-lg-9">
+					<select chosen="" ng-model="addNew.HolderId" class="form-control chosen-select" ng-options="x.Id as x.Name for x in Holders"></select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<div class="col-lg-9 col-lg-offset-3">
+					<button type="button" ng-click="editFormSubmit()" class="btn btn-success">确 定</button>
+					<button type="button" ng-click="closeThisDialog()" class="btn btn-default">取 消</button>
+				</div>
+			</div>
+		</div>
+		<div ng-if="!(checkedItem.Id===4 && editing)" class="formlist" fields-data="fieldsList" close-dialog="closeThisDialog(0)" form-submit="formSubmit(create,checkedItem.Id)" column="column"></div>
+	</div>
+</script>
+<!--end ngDialog createOne-->
+
+<!--begin ngDialog listOne-->
+<script type="text/ng-template" id="listOne">
+	<div class="modal-header">
+		<h5 class="modal-title">{{TitleText}}</h5>
+	</div>
+	<div class="modal-body" cg-busy="ngDialogPromise">
+		<table class="table table-bordered" ng-if="type==='resident'">
+			<tr>
+				<th>序号</th>
+				<th>姓名</th>
+				<th>性别</th>
+				<th>与户主关系</th>
+			</tr>
+			<tr ng-if="!residentList||residentList.length===0">
+				<td colspan="5">暂无居民信息！</td>
+			</tr>
+			<tr ng-repeat="x in residentList">
+				<td>{{$index+1}}</td>
+				<td>{{x.Name}}</td>
+				<td>{{PcService.numberToText(x.Sex,Sexs)}}</td>
+				<td>{{PcService.numberToText(x.HouseholderRelation,matterList)}}</td>
+			</tr>
+		</table>
+		<table class="table table-bordered" ng-if="type==='vehicle'">
+			<tr>
+				<th>序号</th>
+				<th>车主姓名</th>
+				<th>品牌型号</th>
+				<th>车牌号</th>
+			</tr>
+			<tr ng-if="!vehicleList||vehicleList.length===0">
+				<td colspan="5">暂无车辆信息！</td>
+			</tr>
+			<tr ng-repeat="x in vehicleList">
+				<td>{{$index+1}}</td>
+				<td>{{x.ResidentName}}</td>
+				<td>{{x.VehicleBrand}}-{{x.VehicleModel}}</td>
+				<td>{{x.PlateNumber}}</td>
+			</tr>
+		</table>
+		<div class="form-group">
+			<button class="btn btn-default" ng-click="closeThisDialog()">关 闭</button>
+		</div>
+	</div>
+</script>
+<!--end ngDialog listOne-->

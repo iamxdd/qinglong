@@ -1,0 +1,136 @@
+<h3>{{$state.current.title}}</h3>
+<!-- START panel-->
+<div class="panel panel-default" cg-busy="listBusyPromise">
+	<div class="panel-footer">
+		<form role="form" class="form-inline" ng-submit="fetchData()">
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group multiline">位置:
+						<select ng-model="searchOption.position" class="form-control" ng-change="fetchData()">
+							<option value="">全部</option>
+							<option ng-repeat="x in location" value="{{x.Id}}">{{x.Name}}</option>
+						</select>
+					</div>
+
+					<div class="form-group multiline">经营分类：
+						<select class="form-control" ng-options="x.Id as x.Name for x in sellType" ng-change="fetchData()" ng-model="searchOption.sellType">
+						</select>
+					</div>
+					<div class="form-group multiline webkit">
+						<input id="input-keyword" type="text" ng-model="searchOption.value" placeholder=" 请输入店铺名称&商家姓名&电话号码" class="form-control inputIn" />
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group multiline">开始时间：
+						<input class="datepicker form-control worklist" ng-model="searchOption.startTime" type="text" id="datetimeStart" placeholder='开始时间' />
+					</div>
+					<div class="form-group multiline">结束时间：
+						<input class="datepicker form-control worklist" ng-model="searchOption.endTime" type="text" id="datetimeEnd" placeholder='结束时间' />
+					</div>
+					<div class="form-group multiline">
+						<button type="submit" class="btn btn-default">搜 索</button>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+	<!-- START table-responsive-->
+	<div class="table-responsive">
+		<table class="table table-bordered table-hover" style="min-width: 1500px">
+
+			<thead>
+				<tr>
+					<th>序号</th>
+					<th>店铺名称</th>
+					<th>经营分类</th>
+					<th>状态</th>
+					<!--<th>注销时间</th>-->
+					<th>负责人</th>
+					<th>性别</th>
+					<th>身份证号</th>
+					<th>联系电话</th>
+					<th>营业执照码</th>
+					<th>店铺地址</th>
+					<th>备注</th>
+					<th>操作人</th>
+					<th class="text-center">操作</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-if="list.length==0||!list">
+					<td colspan="20">暂无任何数据！</td>
+				</tr>
+				<tr ng-repeat="x in list">
+					<td>{{$index}}</td>
+					<td title="{{x.Name}}">{{PcService.subStrDescribe(x.Name)}}</td>
+					<td class="td-hiddens" title="{{x.SellType}}">{{x.SellType}}</td>
+					<td>{{PcService.subStrDescribe(x.StateName)}}</td>
+					<!--<td>{{LogoutAt|date:"yyyy-MM-dd HH:mm"}}</td>-->
+					<td>{{x.Principal}}</td>
+					<td>{{x.Sex}}</td>
+					<td>{{x.IDCardNo}}</td>
+					<td>{{x.Phone}}</td>
+					<td>{{x.BusinessLicense}}</td>
+					<td title="{{x.Address}}">{{PcService.subStrDescribe(x.Address)}}</td>
+					<td title="{{x.Remarks}}">{{PcService.subStrDescribe(x.Remarks)}}</td>
+					<td>{{PcService.subStrDescribe(x.CreateBy)}}</td>
+					<td class="text-center">
+						<button ng-click="CancellationItem(x)" class="btn btn-default" ng-disabled="x.State===3 ? true : false">注销</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<!-- END table-responsive-->
+	<div class="panel-footer">
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<paging page="pagination.page" page-size="pagination.pageSize" total="pagination.total" show-prev-next="true" show-first-last="true" paging-action="getListSpecifyPage(page,pageSize,total)">
+				</paging>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- END panel-->
+
+<!--begin ngDialog createOne-->
+<!-- 新增 修改登记 -->
+<script type="text/ng-template" id="createOne">
+	<div class="modal-header">
+		<h5 class="modal-title">新增登记</h5>
+	</div>
+	<div class="modal-body">
+		<form class="form-horizontal" cg-busy="ngDialogPromise" ng-submit="formSubmit()">
+			<div class="form-group" ng-repeat="field in fieldsList" ng-class="{'col-lg-6':field.column===1,'col-lg-12':field.column!==1||!field.column}">
+				<label class="control-label" ng-class="{'col-lg-4':field.column===1,'one-columu':field.column===1,'col-lg-2':field.column!==1||!field.column}">{{field.nameDisplay}}</label>
+				<div ng-class="{'col-lg-7':field.column===1,'col-lg-9':field.column!==1||!field.column}">
+					<input ng-if="field.editor==='normal'" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" type="text" maxlength=100 />
+
+					<select ng-if="field.editor==='select'" ng-disabled="field.editable" class="form-control" ng-model="field.value" ng-required="field.required" ng-options="x.Id as x.Name for x in field.opts">
+					</select>
+					<div class="form-inline" ng-if="field.editor==='radio'">
+						<label class="checkbox-inline" ng-repeat="x in field.opts">
+							<input type="radio" ng-model="field.value" value="{{x.Id}}" name="name_{{field.name}}"> {{x.Name}}
+						</label>
+					</div>
+					<div class="form-group" col-lg-7 ng-if="field.editor==='textarea'">
+						<textarea ng-disabled="field.editable" ng-model="field.value" placeholder="请输入信息" ng-required="field.required" class="form-control fundtext" />
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<div class="col-lg-offset-5 col-lg-12 fundfooter" style="margin-top: 30px;">
+					<button class="btn btn-success" type="submit">确 定</button>
+					<button type="button" class="btn btn-default" ng-click="closeThisDialog(0)">取 消</button>
+				</div>
+			</div>
+			<div class="clearfix">
+
+			</div>
+		</form>
+	</div>
+</script>
+<!--end ngDialog createOne-->
